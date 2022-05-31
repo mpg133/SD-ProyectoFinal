@@ -6,6 +6,9 @@ from dotenv import dotenv_values
 from kafka import KafkaConsumer as kc
 from kafka import TopicPartition
 
+from kafka import KafkaProducer as kp
+
+
 import grpc
 import concurrent.futures as futures
 
@@ -27,6 +30,17 @@ AFORO_MAX=config['AFORO_MAX']
 AFORO=0
 
 
+def handleVisitante():
+
+    topic = "loginTopic"
+    consumer = kc(topic, bootstrap_servers = ENGINE_PORT)
+    print("[LOGIN] Awaiting for info on Kafka Server topic = " + topic)
+
+def listenMsg(cons):
+    msg = next(cons)
+    return msg.value.decode('utf-8')
+     
+
 def main():
     global ENGINE_IP
     global ENGINE_GRPC_IP
@@ -35,11 +49,6 @@ def main():
     global AFORO_MAX
     
     
-    print(ENGINE_IP)
-    print(ENGINE_GRPC_IP)
-    print(ENGINE_PORT)
-    print(ENGINE_GRPC_PORT)
-    print(AFORO_MAX)
-    
+    handleVisitante()
 
 main()

@@ -19,11 +19,6 @@ class TodoStub(object):
                 request_serializer=todo__pb2.RegVis.SerializeToString,
                 response_deserializer=todo__pb2.RegReturns.FromString,
                 )
-        self.loginVisitante = channel.unary_unary(
-                '/todoPackage.Todo/loginVisitante',
-                request_serializer=todo__pb2.RegVis.SerializeToString,
-                response_deserializer=todo__pb2.RegReturns.FromString,
-                )
         self.editarVisitante = channel.unary_unary(
                 '/todoPackage.Todo/editarVisitante',
                 request_serializer=todo__pb2.EditVis.SerializeToString,
@@ -40,12 +35,6 @@ class TodoServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def loginVisitante(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def editarVisitante(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -57,11 +46,6 @@ def add_TodoServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'registrarVisitante': grpc.unary_unary_rpc_method_handler(
                     servicer.registrarVisitante,
-                    request_deserializer=todo__pb2.RegVis.FromString,
-                    response_serializer=todo__pb2.RegReturns.SerializeToString,
-            ),
-            'loginVisitante': grpc.unary_unary_rpc_method_handler(
-                    servicer.loginVisitante,
                     request_deserializer=todo__pb2.RegVis.FromString,
                     response_serializer=todo__pb2.RegReturns.SerializeToString,
             ),
@@ -92,23 +76,6 @@ class Todo(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/todoPackage.Todo/registrarVisitante',
-            todo__pb2.RegVis.SerializeToString,
-            todo__pb2.RegReturns.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def loginVisitante(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/todoPackage.Todo/loginVisitante',
             todo__pb2.RegVis.SerializeToString,
             todo__pb2.RegReturns.FromString,
             options, channel_credentials,

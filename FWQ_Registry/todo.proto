@@ -5,7 +5,6 @@ package todoPackage;
 
 service Todo{
 	rpc registrarVisitante(RegVis) returns(RegReturns){}
-	rpc loginVisitante(RegVis) returns(RegReturns){}
 	rpc editarVisitante(EditVis) returns(RegReturns){}
 }
 
