@@ -26,7 +26,7 @@ class TodoServicer(todo_pb2_grpc.TodoServicer):
         try:
             response.ok=True
             response.name=request.name
-            response.id=2
+            response.id="2"
             response.msg="correcto"
             return response
 
@@ -43,19 +43,19 @@ def main():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     todo_pb2_grpc.add_TodoServicer_to_server(TodoServicer(), server)
     options = (('grpc.ssl_target_name_override', "cn.from.cert.com",),)
-  
-    private_key = open("ca-key.pem", 'rb').read()
-    certificate_chain = open("ca-cert.pem", 'rb').read()
-  
+    
+    ca_cert = open("client-cert.pem",'rb').read()
+    private_key = open("server-key.pem", 'rb').read()
+    certificate_chain = open("server-cert.pem", 'rb').read()
+    
     credentials = grpc.ssl_server_credentials(
         [(private_key, certificate_chain)],
         root_certificates=ca_cert,
         require_client_auth=True
     )
     
-    cert = open('ca-cert.pem', 'rb').read()
-    channel_creds = grpc.ssl_channel_credentials(cert)
-    server.add_secure_port('[::]:' + REGISTRY_GRPC_PORT, channel_creds)
+  
+    server.add_secure_port('[::]:' + REGISTRY_GRPC_PORT, credentials)
     server.start()
     print('Starting server. Listening on port ' + REGISTRY_GRPC_PORT)
     try:

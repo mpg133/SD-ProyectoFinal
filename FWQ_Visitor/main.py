@@ -31,8 +31,11 @@ def registrarVisitante(stub, name, password):
 
 def iniciarGrpcSecure():
 
-        cert = open('ca-cert.pem', 'rb').read()
-        channel_creds = grpc.ssl_channel_credentials(cert)
+        cert = open('client-cert.pem', 'rb').read()
+        key = open('client-key.pem','rb').read()
+        ca_cert = open('ca.pem','rb').read()
+        
+        channel_creds = grpc.ssl_channel_credentials(ca_cert,key,cert)
 
 
         channel = grpc.secure_channel(VISITOR_GRPC_IP +":"+VISITOR_GRPC_PORT,channel_creds)
@@ -50,7 +53,9 @@ def main():
 
     
     stub = iniciarGrpcSecure()
+    
     id, name, ok, msg = registrarVisitante(stub, name, password)
+   
     print(msg)
     
 
