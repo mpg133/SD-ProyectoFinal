@@ -10,5 +10,6 @@ else
 fi
 
 gnome-terminal -t zookeper --tab -- kafka_2.13-3.2.0/bin/zookeeper-server-start.sh kafka_2.13-3.2.0/config/zookeeper.properties
+sleep 1
 gnome-terminal -t kafka --tab -- kafka_2.13-3.2.0/bin/kafka-server-start.sh server.properties
 

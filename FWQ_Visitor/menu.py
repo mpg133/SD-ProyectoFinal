@@ -2,6 +2,7 @@ def menuOption():
     print('1. Registrar usuario')
     print('2. Editar usuario')
     print('3. Entrar al parque')
+    print('4. Salir')
     print()
     return input()
 
