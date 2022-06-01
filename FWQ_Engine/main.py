@@ -9,34 +9,27 @@ from kafka import KafkaConsumer as kc
 from kafka import TopicPartition
 
 from kafka import KafkaProducer as kp
-
-
-import grpc
-import concurrent.futures as futures
-
-
-import todo_pb2
-import todo_pb2_grpc
-
+from login import *
 
 def json_serializer(data):
     return json.dumps(data).encode('utf-8')
 
 config = dotenv_values(".env")
 
-ENGINE_IP = config['ENGINE_IP']
-ENGINE_GRPC_IP = config['ENGINE_GRPC_IP']
-ENGINE_GRPC_PORT = config['ENGINE_GRPC_PORT']
-ENGINE_PORT=config['ENGINE_PORT']
+KAFKA_IP = config['KAFKA_IP']
+KAFKA_PORT = config['KAFKA_PORT']
+GRPC_WTS_IP = config['GRPC_WTS_IP']
+GRPC_WTS_PORT = config['GRPC_WTS_PORT']
+
 AFORO_MAX=config['AFORO_MAX']
 AFORO=0
 
 
-def handleVisitante():
-
+def loginConsumer():
     topic = "loginTopic"
-    consumer = kc(topic, bootstrap_servers = ENGINE_PORT)
+    consumer = kc(topic, bootstrap_servers = KAFKA_IP + ":" + KAFKA_PORT)
     print("[LOGIN] Awaiting for info on Kafka Server topic = " + topic)
+    return consumer
 
 def listenMsg(cons):
     msg = next(cons)
@@ -50,7 +43,8 @@ def main():
     global ENGINE_GRPC_PORT
     global AFORO_MAX
     
-    
-    handleVisitante()
+    lCons = loginConsumer()
+    msg = listenMsg(lCons)
+    print(msg)
 
 main()

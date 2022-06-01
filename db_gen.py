@@ -8,7 +8,7 @@ os.system('rm -rf database.db 2>/dev/null')
 
 conn = sqlite3.connect('database.db')
 cur = conn.cursor()
-cur.execute(''' CREATE TABLE visitor (id INTEGER PRIMARY KEY AUTOINCREMENT, name, password ) ''')
+cur.execute(''' CREATE TABLE visitor (id INTEGER PRIMARY KEY AUTOINCREMENT, name UNIQUE, password ) ''')
 cur.execute(''' CREATE TABLE attraction (id INTEGER PRIMARY KEY AUTOINCREMENT, wait_time ) ''')
 cur.execute(''' CREATE TABLE map ( x, y, content ) ''')
 
