@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+
+import sqlite3
 import os
 import json
 import grpc
@@ -21,6 +24,8 @@ class TodoServicer(todo_pb2_grpc.TodoServicer):
     
     def registrarVisitante(self, request, context):
             
+        #select max(id) from attraction order by id
+
         response = todo_pb2.RegReturns()
         
         try:
@@ -28,6 +33,8 @@ class TodoServicer(todo_pb2_grpc.TodoServicer):
             response.name=request.name
             response.id="2"
             response.msg="correcto"
+            print('Usuario correcto.')
+
             return response
 
         except:
@@ -38,8 +45,14 @@ class TodoServicer(todo_pb2_grpc.TodoServicer):
 
 def main():
 
+    try:
+        open('../database.db', 'rb').close()
+    except:
+        os.system('cd ..; ./db_gen.py')
+
     global REGISTRY_GRPC_PORT
     global REGISTRY_GRPC_IP
+
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     todo_pb2_grpc.add_TodoServicer_to_server(TodoServicer(), server)
     options = (('grpc.ssl_target_name_override', "cn.from.cert.com",),)
@@ -58,6 +71,7 @@ def main():
     server.add_secure_port('[::]:' + REGISTRY_GRPC_PORT, credentials)
     server.start()
     print('Starting server. Listening on port ' + REGISTRY_GRPC_PORT)
+
     try:
         while True:
             time.sleep(86400)

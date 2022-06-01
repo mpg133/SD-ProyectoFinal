@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+
+from movements import *
 import os
 import json
 import grpc
@@ -47,7 +50,6 @@ def main():
     global VISITOR_PORT
     global VISITOR_GRPC_PORT
     
-    id = 1
     name = "pepe"
     password = "12345"
 
@@ -55,8 +57,11 @@ def main():
     stub = iniciarGrpcSecure()
     
     id, name, ok, msg = registrarVisitante(stub, name, password)
-   
+
+    print(id)
     print(msg)
+
+    print(moveNE([19,19]))
     
 
 main()
