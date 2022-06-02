@@ -6,3 +6,4 @@ python3 -m pip install grpcio
 python3 -m pip install python-dotenv
 python3 -m pip install concurrent
 python3 -m pip install kafka-python
+python3 -m pip install thread6
