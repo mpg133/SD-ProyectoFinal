@@ -45,7 +45,6 @@ def neigh(mapa, pos, free):
 
 def minDist(positions, target):
     min_dist = [positions[0], 10000000]
-
     for pos in positions:
         dist = [target[0] - pos[0], target[1] - pos[1]]
         dist = sqrt(dist[0]**2 + dist[1]**2)
@@ -65,29 +64,18 @@ def moveAuto(mapa, pos, attrs):
 
     free = neigh(mapa, pos, True)
     
-    if pos[0] < toGo[0] and pos[1] < toGo[1]:
-        newPos = xUp(yUp(pos))
-        #print('abajo a la derecha esta la atraccion')
-    elif pos[0] < toGo[0] and pos[1] > toGo[1]:
-        newPos = xUp(yDown(pos))
-        #print('abajo a la izquierda esta la atraccion')
-    elif pos[0] > toGo[0] and pos[1] > toGo[1]:
-        newPos = xDown(yDown(pos))
-        #print('arriba a la izquierda esta la atraccion')
-    elif pos[0] > toGo[0] and pos[1] < toGo[1]:
-        newPos = xDown(yUp(pos))
-        #print('arriba a la derecha esta la atraccion')
-    elif pos[0] > toGo[0] and pos[1] == toGo[1]:
-        newPos = xDown(pos)
-        #print('arriba esta la atraccion')
-    elif pos[0] < toGo[0] and pos[1] == toGo[1]:
+    # pos[0]<toGo[0] abajo | pos[0]>toGo[0] arriba | pos[1]<toGo[1] derecha | pos[1]>toGo[1] izquierda
+    
+    newPos = pos
+
+    if pos[0] < toGo[0]:
         newPos = xUp(pos)
-        #print('abajo esta la atraccion')
-    elif pos[0] == toGo[0] and pos[1] < toGo[1]:
-        newPos = yUp(pos)
-        #print('derecha esta la atraccion')
-    elif pos[0] == toGo[0] and pos[1] > toGo[1]:
-        newPos = yDown(pos)
-        #print('izquierda esta la atraccion')
+    elif pos[0] > toGo[0]:
+        newPos = xDown(pos)
+
+    if pos[1] < toGo[1]:
+        newPos = yUp(newPos)
+    elif pos[1] > toGo[1]:
+        newPos = yDown(newPos)
         
     return newPos if newPos in free else minDist(free, toGo)
