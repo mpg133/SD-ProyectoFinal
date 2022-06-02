@@ -19,18 +19,18 @@ BROKER = ENGINE_KAFKA_IP +':'+ ENGINE_KAFKA_PORT
 
 name = ''
 
-def handler(signum, frame):
+def signalExit(signum, frame):
+    print("\n\nEXIT")
     try:
         prod = kp(bootstrap_servers=BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
         prod.send(name + 'Topic', {'ok' : False})
-        time.sleep(0.2)
         admin_client = KafkaAdminClient(bootstrap_servers=BROKER)
         admin_client.delete_topics(topics=[name + 'Topic', name + 'TopicRecv'])
     except:
         exit(1)
     exit(1)
 
-signal.signal(signal.SIGINT, handler)
+signal.signal(signal.SIGINT, signalExit)
 
 
 def main():
@@ -57,7 +57,7 @@ def main():
             if(parqueLogin(name, password)):
                 entraAlParque(name)
         elif option == "4":
-            handler('','')
+            signalExit('','')
 
 
 

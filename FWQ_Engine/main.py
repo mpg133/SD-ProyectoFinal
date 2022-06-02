@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from get_bd import *
 import os
 import json
 from threading import Thread
@@ -13,6 +14,13 @@ from kafka.admin import KafkaAdminClient
 from kafka import KafkaProducer as kp
 from login import *
 import time
+
+import signal
+
+def signalExit(signum, frame):
+    print("\n\nEXIT")
+    exit(1)
+signal.signal(signal.SIGINT, signalExit)
 
 def json_serializer(data):
     return json.dumps(data).encode('utf-8')
@@ -28,18 +36,8 @@ GRPC_WTS_PORT = config['GRPC_WTS_PORT']
 AFORO_MAX=int(config['AFORO_MAX'])
 AFORO=0
 
-
-def createLoginConsumer():
-    topic = "loginTopic"
-    consumer = kc(topic, bootstrap_servers = BROKER)
-    return consumer
-
-def listenMsg(cons):
-    print("[LOGIN] Awaiting for info on Kafka Server")
-    msg = next(cons)
-    return msg.value.decode('utf-8')
-
 def exit_delete_topics(name):
+    print("Visitor '" + name + "' disconnected.")
     global AFORO
     AFORO -= 1
     try:
@@ -51,12 +49,21 @@ def exit_delete_topics(name):
 
 def handleVisitor(name):
     consumer = kc(name + 'Topic', bootstrap_servers = BROKER, consumer_timeout_ms=3000)
+    producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
+    print("Visitor '" + name + "' connected.")
     try:
         while True:
-            msg = json.loads(listenMsg(consumer))
-            print(msg)
+            #print("Visitor '" + name + "' connected. Waiting response...")
+            msg = json.loads(next(consumer).value.decode('utf-8'))
+            #print(msg)
+            
+            time.sleep(0.3)
+            mapa = getMap()
+            producer.send(name+"TopicRecv", {'ok': True, 'mapa' : mapa })
+
             if not msg['ok']:
-                break
+                AFORO -= 1
+                exit_delete_topics(name)
     except:
         exit_delete_topics(name)
             
@@ -64,17 +71,18 @@ def handleVisitor(name):
 
 def main():
    
-    login_consumer = createLoginConsumer()
+    login_consumer = kc("loginTopic", bootstrap_servers = BROKER)
     producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
 
     while True:
-        msg = json.loads(listenMsg(login_consumer))
+        print("[LOGIN] Awaiting for info on Kafka Server")
+        msg = json.loads(next(login_consumer).value.decode('utf-8'))
+
         if login(msg['name'], msg['password']):
 
             global AFORO_MAX
             global AFORO
-            print('AFORO MAX: ' + str(AFORO_MAX) + ", AFORO: " + str(AFORO))
-            if int(AFORO_MAX) > int(AFORO) :
+            if AFORO_MAX > AFORO :
                 AFORO += 1
                 time.sleep(0.1)
 
@@ -84,7 +92,7 @@ def main():
                 new_thread.start()
             else:
                 time.sleep(0.1)
-                producer.send("loginResponsesTopic", {'ok': False, 'msg' : 'Aforo completp'})
+                producer.send("loginResponsesTopic", {'ok': False, 'msg' : 'Aforo completo'})
 
 
         else:
