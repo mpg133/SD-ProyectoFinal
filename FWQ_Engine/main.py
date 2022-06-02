@@ -3,10 +3,13 @@
 import os
 import json
 
+from threading import Thread, Event
+
 from dotenv import dotenv_values
 
 from kafka import KafkaConsumer as kc
 from kafka import TopicPartition
+from kafka.admin import KafkaAdminClient
 
 from kafka import KafkaProducer as kp
 from login import *
@@ -37,6 +40,28 @@ def listenMsg(cons):
     msg = next(cons)
     return msg.value.decode('utf-8')
 
+def exit_delete_topics(name):
+    try:
+        admin_client = KafkaAdminClient(bootstrap_servers=BROKER)
+        admin_client.delete_topics(topics=[name + 'Topic', name + 'TopicRecv'])
+    except:
+        exit(1)
+    exit(1)
+
+def handleVisitor(name):
+
+    consumer = kc(name + 'Topic', bootstrap_servers = BROKER, consumer_timeout_ms=3000)
+    try:
+        while True:
+            msg = json.loads(listenMsg(consumer))
+            print(msg)
+            if not msg['ok']:
+                break
+    except:
+        exit_delete_topics(name)
+            
+
+
 
 def main():
    
@@ -46,10 +71,12 @@ def main():
     msg = json.loads(listenMsg(login_consumer))
 
     if login(msg['name'], msg['password']):
-        time.sleep(0.5)
-        producer.send("loginResponsesTopic", 'login ok')
+        time.sleep(0.1)
+        producer.send("loginResponsesTopic", {'ok': True, 'msg' : 'login ok'})
+        handleVisitor(msg['name'])
+
     else:
-        time.sleep(0.5)
-        producer.send("loginResponsesTopic", 'ERROR login')
+        time.sleep(0.1)
+        producer.send("loginResponsesTopic", {'ok': False, 'msg' : 'ERROR login'})
 
 main()
