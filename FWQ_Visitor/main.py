@@ -18,6 +18,7 @@ ENGINE_KAFKA_PORT = config['ENGINE_KAFKA_PORT']
 BROKER = ENGINE_KAFKA_IP +':'+ ENGINE_KAFKA_PORT
 
 name = ''
+my_id = ''
 
 def signalExit(signum, frame):
     print("\n\nEXIT")
@@ -35,6 +36,7 @@ signal.signal(signal.SIGINT, signalExit)
 
 def main():
     global name
+    global my_id
     stub = iniciarGrpcSecure()
     
     option = "0"
@@ -54,8 +56,9 @@ def main():
         elif option == "3":
             name, password = askCreds()
             print('entrar al parque')
-            if(parqueLogin(name, password)):
-                entraAlParque(name)
+            loginOk, firstPos, my_id = parqueLogin(name, password)
+            if(loginOk):
+                entraAlParque(name, firstPos)
         elif option == "4":
             signalExit('','')
 

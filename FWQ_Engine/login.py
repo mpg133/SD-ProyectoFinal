@@ -11,12 +11,12 @@ def login(name, password):
     rows = cur.fetchall()
     if len(rows) < 1:
         conn.close()
-        return False
+        return False, None
 
     if rows[0][2] == hashlib.md5(bytes(password, encoding="utf8")).hexdigest():
         conn.close()
-        return True
+        return True, int(rows[0][0])
 
-    return False
+    return False, None
 
 

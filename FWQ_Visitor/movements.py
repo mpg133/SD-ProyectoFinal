@@ -1,28 +1,93 @@
 #!/usr/bin/python3
 
 from dotenv import dotenv_values
+from math import sqrt
 
 config = dotenv_values(".env")
 MAP_SIZE = int(config['MAP_SIZE'])
 
 
-def moveN(pos):
+def xUp(pos):
+    return [pos[0] + 1 if pos[0] < MAP_SIZE - 1 else 0, pos[1]]
+def xDown(pos):
+    return [pos[0] - 1 if pos[0] > 0 else MAP_SIZE - 1, pos[1]]
+def yDown(pos):
+    return [pos[0], pos[1] - 1 if pos[1] > 0 else MAP_SIZE - 1]
+def yUp(pos):
     return [pos[0], pos[1] + 1 if pos[1] < MAP_SIZE - 1 else 0]
 
-def moveS(pos):
-    return [pos[0], pos[1] - 1 if pos[1] > 0 else MAP_SIZE - 1]
+def getMinTimeAttraction(attrs):
+    minTime = min(attrs.values())
+    for n in attrs.keys():
+        if attrs[n] == minTime:
+            val = n
+            break
+    return val
 
-def moveE(pos):
-    return [pos[0] + 1 if pos[0] < MAP_SIZE - 1 else 0, pos[1]]
+def searchAttrById(mapa, att):
+    for i in range(len(mapa)):
+        for j in range(len(mapa[i])):
+            if(att == mapa[i][j]):
+                return [i,j]
 
-def moveW(pos):
-    return [pos[0] - 1 if pos[0] > 0 else MAP_SIZE - 1, pos[1]]
+def neigh(mapa, pos, free):
+    free_positions = []
+    for i in range(-1,2):
+        for j in range(-1,2):
+            if free:
+                if((i != 0 or j != 0) and mapa[pos[0]+i][pos[1]+j] == '0'):
+                    free_positions.append([pos[0]+i,pos[1]+j])
+            else:
+                if((i != 0 or j != 0) and mapa[pos[0]+i][pos[1]+j] != '0'):
+                    free_positions.append([pos[0]+i,pos[1]+j])
 
-def moveNW(pos):
-    return moveW(moveN(pos))
-def moveNE(pos):
-    return moveE(moveN(pos))
-def moveSW(pos):
-    return moveW(moveS(pos))
-def moveSE(pos):
-    return moveE(moveS(pos))
+    return free_positions
+
+def minDist(positions, target):
+    min_dist = [positions[0], 10000000]
+
+    for pos in positions:
+        dist = [target[0] - pos[0], target[1] - pos[1]]
+        dist = sqrt(dist[0]**2 + dist[1]**2)
+        if min_dist[1] > dist:
+            min_dist[0] = pos
+            min_dist[1] = dist
+
+    return min_dist[0]
+
+
+def moveAuto(mapa, pos, attrs):
+    id_attr = getMinTimeAttraction(attrs)
+    toGo = searchAttrById(mapa, id_attr)
+    occupied = neigh(mapa, pos, False)
+    if toGo in occupied:
+        return pos
+
+    free = neigh(mapa, pos, True)
+    
+    if pos[0] < toGo[0] and pos[1] < toGo[1]:
+        newPos = xUp(yUp(pos))
+        #print('abajo a la derecha esta la atraccion')
+    elif pos[0] < toGo[0] and pos[1] > toGo[1]:
+        newPos = xUp(yDown(pos))
+        #print('abajo a la izquierda esta la atraccion')
+    elif pos[0] > toGo[0] and pos[1] > toGo[1]:
+        newPos = xDown(yDown(pos))
+        #print('arriba a la izquierda esta la atraccion')
+    elif pos[0] > toGo[0] and pos[1] < toGo[1]:
+        newPos = xDown(yUp(pos))
+        #print('arriba a la derecha esta la atraccion')
+    elif pos[0] > toGo[0] and pos[1] == toGo[1]:
+        newPos = xDown(pos)
+        #print('arriba esta la atraccion')
+    elif pos[0] < toGo[0] and pos[1] == toGo[1]:
+        newPos = xUp(pos)
+        #print('abajo esta la atraccion')
+    elif pos[0] == toGo[0] and pos[1] < toGo[1]:
+        newPos = yUp(pos)
+        #print('derecha esta la atraccion')
+    elif pos[0] == toGo[0] and pos[1] > toGo[1]:
+        newPos = yDown(pos)
+        #print('izquierda esta la atraccion')
+        
+    return newPos if newPos in free else minDist(free, toGo)

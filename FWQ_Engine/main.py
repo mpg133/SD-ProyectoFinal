@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from get_bd import *
+from map_funcs import *
 import os
 import json
 from threading import Thread
@@ -36,10 +36,11 @@ GRPC_WTS_PORT = config['GRPC_WTS_PORT']
 AFORO_MAX=int(config['AFORO_MAX'])
 AFORO=0
 
-def exit_delete_topics(name):
-    print("Visitor '" + name + "' disconnected.")
+def exit_delete_topics(mapa, id_vis, name):
+    updatePosition(mapa, id_vis, -1)
     global AFORO
     AFORO -= 1
+    print("[CLOSING CONNECTION] Visitor \"" + name + "\" disconnected.")
     try:
         admin_client = KafkaAdminClient(bootstrap_servers=BROKER)
         admin_client.delete_topics(topics=[name + 'Topic', name + 'TopicRecv'])
@@ -47,29 +48,34 @@ def exit_delete_topics(name):
         exit(1)
     exit(1)
 
-def handleVisitor(name):
+
+def handleVisitor(name, id_vis):
     consumer = kc(name + 'Topic', bootstrap_servers = BROKER, consumer_timeout_ms=3000)
     producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
-    print("Visitor '" + name + "' connected.")
+    print("[ESTABLISHED CONNECTION] Visitor \"" + name + "\" connected.")
+    mapa = getMap()
+
     try:
         while True:
-            #print("Visitor '" + name + "' connected. Waiting response...")
             msg = json.loads(next(consumer).value.decode('utf-8'))
-            #print(msg)
-            
-            time.sleep(0.3)
-            mapa = getMap()
-            producer.send(name+"TopicRecv", {'ok': True, 'mapa' : mapa })
+            mapa, attrs = getMap()
+            mapa = updatePosition(mapa, id_vis, msg['pos'])
+            time.sleep(0.2)
+
+            producer.send(name+"TopicRecv", {'ok': True, 'mapa' : mapa , 'attrs' : attrs})
 
             if not msg['ok']:
-                AFORO -= 1
-                exit_delete_topics(name)
+                break
     except:
-        exit_delete_topics(name)
+        print('Connection lost with visitor "'+name+'"')
+    finally:
+        exit_delete_topics(mapa, id_vis, name)
             
 
 
 def main():
+    global AFORO_MAX
+    global AFORO
    
     login_consumer = kc("loginTopic", bootstrap_servers = BROKER)
     producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
@@ -77,26 +83,21 @@ def main():
     while True:
         print("[LOGIN] Awaiting for info on Kafka Server")
         msg = json.loads(next(login_consumer).value.decode('utf-8'))
+        time.sleep(0.1)
 
-        if login(msg['name'], msg['password']):
+        aforoOk = AFORO_MAX > AFORO
+        loginOk, id_vis = login(msg['name'], msg['password'])
+        if loginOk and aforoOk:
+            AFORO += 1
+            
+            mapa, _ = getMap()
+            firstPos = getRandomEmpty(mapa)
+            producer.send("loginResponsesTopic", {'ok': True, 'firstPos' : firstPos, 'id_vis': id_vis, 'msg' : 'Login ok'})
 
-            global AFORO_MAX
-            global AFORO
-            if AFORO_MAX > AFORO :
-                AFORO += 1
-                time.sleep(0.1)
-
-                producer.send("loginResponsesTopic", {'ok': True, 'msg' : 'Login ok'})
-
-                new_thread = Thread(target=handleVisitor, args={msg['name']})
-                new_thread.start()
-            else:
-                time.sleep(0.1)
-                producer.send("loginResponsesTopic", {'ok': False, 'msg' : 'Aforo completo'})
-
+            new_thread = Thread(target=handleVisitor, args=(msg['name'], id_vis))
+            new_thread.start()
 
         else:
-            time.sleep(0.1)
-            producer.send("loginResponsesTopic", {'ok': False, 'msg' : 'ERROR login'})
+            producer.send("loginResponsesTopic", {'ok': False, 'msg' : 'ERROR login' if aforoOk else 'Aforo completo'})
 
 main()

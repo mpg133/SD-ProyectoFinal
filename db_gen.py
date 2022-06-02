@@ -12,16 +12,13 @@ cur.execute(''' CREATE TABLE visitor (id INTEGER PRIMARY KEY AUTOINCREMENT, name
 cur.execute(''' CREATE TABLE attraction (id INTEGER PRIMARY KEY AUTOINCREMENT, wait_time ) ''')
 cur.execute(''' CREATE TABLE map ( id INTEGER PRIMARY KEY, content ) ''')
 
-# HACER MAPA EN UN STRING SEPARADO POR ALGUN SIMBOLO Y UTILIZAR SPLIT PARA TRANSFORMARLO
-
-
 def main():
     mapa = ''
     id_attr = 1
     for i in range(20):
         for j in range(20):
             if random.randrange(0,30) == 0:
-                cur.execute(' INSERT into attraction (wait_time) values('+str(30)+')')
+                cur.execute(' INSERT into attraction (wait_time) values('+str(random.randrange(15,31))+')')
                 mapa += str(id_attr) + ' '
                 id_attr += 1
             else:
