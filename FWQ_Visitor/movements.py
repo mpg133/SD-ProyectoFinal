@@ -61,6 +61,7 @@ def moveAuto(mapa, pos, attrs):
     occupied = neigh(mapa, pos, False)
     if toGo in occupied:
         return pos
+        #return toGo
 
     free = neigh(mapa, pos, True)
     
