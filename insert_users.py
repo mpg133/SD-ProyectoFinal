@@ -44,5 +44,11 @@ cur.execute('insert into visitor(name, password) values("h", "'+pass_hash+'")')
 pass_hash = hashlib.md5(bytes("i", encoding="utf8")).hexdigest()
 cur.execute('insert into visitor(name, password) values("i", "'+pass_hash+'")')
 
+pass_hash = hashlib.md5(bytes("j", encoding="utf8")).hexdigest()
+cur.execute('insert into visitor(name, password) values("j", "'+pass_hash+'")')
+
+pass_hash = hashlib.md5(bytes("k", encoding="utf8")).hexdigest()
+cur.execute('insert into visitor(name, password) values("k", "'+pass_hash+'")')
+
 conn.commit()
 conn.close()
