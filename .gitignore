@@ -5,6 +5,7 @@ FWQ_Visitor/connect_visitors/fifo*
 FWQ_Engine/__pycache__
 FWQ_Sensor/__pycache__
 FWQ_Sensor/fisic_attractions/attr*
+FWQ_Sensor/active_sensors/*
 FWQ_Waiting_Time_Server/__pycache__
 kafka/kafka_2.13-3.2.0
 kafka/kafka_2.13-3.0.0

@@ -4,17 +4,43 @@ import os
 import json
 import random
 import time
+import signal
 
 from kafka import KafkaProducer as kp
 
 from dotenv import dotenv_values
+
+
+def signalExit(signum, frame):
+    os.system('rm -rf active_sensors/' + str(sensor_id))
+    exit(1)
+
+signal.signal(signal.SIGINT, signalExit)
 
 config = dotenv_values('.env')
 ENGINE_KAFKA_IP = config['ENGINE_KAFKA_IP']
 ENGINE_KAFKA_PORT = config['ENGINE_KAFKA_PORT']
 BROKER = ENGINE_KAFKA_IP +':'+ ENGINE_KAFKA_PORT
 
-sensor_id = 2
+
+attrs = os.listdir('fisic_attractions')
+attrs = [a[0:-5] for a in attrs]
+attrs = [a[4:] for a in attrs]
+
+sensor_id = -1
+active_sensors = os.listdir('active_sensors')
+if len(active_sensors) == 0:
+    sensor_id = 1
+else:
+    for i in range(len(active_sensors)):
+        if int(active_sensors[i]) != attrs[i]:
+            sensor_id = attrs[i]
+
+if sensor_id != -1:
+    os.system('touch active_sensors/' + str(sensor_id))
+else:
+    print('Todas las atracciones tienen un sensor activo')
+    exit()
 
 timePassed = 0
 

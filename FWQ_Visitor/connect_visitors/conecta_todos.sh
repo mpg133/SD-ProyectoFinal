@@ -2,12 +2,6 @@
 
 for vis in $(cat visitantes)
 do
-    gnome-terminal -t $vis --tab -- ./conecta_vis.sh $vis
-done
-
-for vis in $(cat visitantes)
-do
-    ./exec_$vis.sh
+    gnome-terminal -t $vis --tab -- echo $vis && ./conecta_vis.sh $vis
     sleep 0.5
 done
-

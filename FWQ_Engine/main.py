@@ -86,6 +86,7 @@ def main():
     while True:
         print("[LOGIN] Awaiting for info on Kafka Server")
         msg = json.loads(next(login_consumer).value.decode('utf-8'))
+        #print('attempt: ' + msg['name'])
         time.sleep(0.1)
 
         aforoOk = AFORO_MAX > AFORO
