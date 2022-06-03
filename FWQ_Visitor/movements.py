@@ -24,6 +24,11 @@ def getMinTimeAttraction(attrs):
             break
     return val
 
+def getToGo(mapa, attrs):
+    id_attr = getMinTimeAttraction(attrs)
+    return id_attr, searchAttrById(mapa, id_attr)
+
+
 def searchAttrById(mapa, att):
     for i in range(len(mapa)):
         for j in range(len(mapa[i])):
@@ -56,8 +61,7 @@ def minDist(positions, target):
 
 
 def moveAuto(mapa, pos, attrs):
-    id_attr = getMinTimeAttraction(attrs)
-    toGo = searchAttrById(mapa, id_attr)
+    id_attr, toGo = getToGo(mapa, attrs)
     occupied = neigh(mapa, pos, False)
     if toGo in occupied:
         return pos
@@ -79,4 +83,4 @@ def moveAuto(mapa, pos, attrs):
     elif pos[1] > toGo[1]:
         newPos = yDown(newPos)
         
-    return newPos if newPos in free else minDist(free, toGo)
+    return newPos if newPos in free else minDist(free, toGo), toGo

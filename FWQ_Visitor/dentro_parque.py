@@ -59,14 +59,15 @@ def entraAlParque(name, firstPos):
     producer.send(name+'Topic', {'ok':True, 'posX' : firstPos[0], 'posY' : firstPos[1]})
     time.sleep(1)
 
+    toGo = -1
     pos = firstPos
     while True:
-        producer.send(name+'Topic', {'ok':True, 'pos' : pos})
+        producer.send(name+'Topic', {'ok':True, 'pos' : pos, 'to_go' : toGo })
         msg = json.loads(next(consumer).value.decode('utf-8'))
         
         print(mapaToString(msg['mapa']))
 
-        pos = moveAuto(msg['mapa'], pos, msg['attrs'])
+        pos, toGo = moveAuto(msg['mapa'], pos, msg['attrs'])
 
         time.sleep(1)
 

@@ -4,7 +4,10 @@ import sqlite3
 import os
 import random
 
+import json
+
 os.system('rm -rf database.db 2>/dev/null')
+os.system('rm -rf FWQ_Sensor/attr* 2>/dev/null')
 
 conn = sqlite3.connect('database.db')
 cur = conn.cursor()
@@ -19,6 +22,7 @@ def main():
         for j in range(20):
             if random.randrange(0,30) == 0:
                 cur.execute(' INSERT into attraction (wait_time) values('+str(random.randrange(15,31))+')')
+                os.system('touch FWQ_Sensor/attr'+str(id_attr)+'.josn')
                 mapa += str(id_attr) + ' '
                 id_attr += 1
             else:

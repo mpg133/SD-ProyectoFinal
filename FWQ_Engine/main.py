@@ -33,11 +33,13 @@ BROKER = KAFKA_IP + ":" + KAFKA_PORT
 GRPC_WTS_IP = config['GRPC_WTS_IP']
 GRPC_WTS_PORT = config['GRPC_WTS_PORT']
 
+LOGED = []
 AFORO_MAX=int(config['AFORO_MAX'])
 AFORO=0
 
 def exit_delete_topics(mapa, id_vis, name):
     updatePosition(mapa, id_vis, -1)
+    LOGED.remove(name)
     global AFORO
     AFORO -= 1
     print("[CLOSING CONNECTION] Visitor \"" + name + "\" disconnected.")
@@ -76,6 +78,7 @@ def handleVisitor(name, id_vis):
 def main():
     global AFORO_MAX
     global AFORO
+    global LOGED
    
     login_consumer = kc("loginTopic", bootstrap_servers = BROKER)
     producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
@@ -87,8 +90,10 @@ def main():
 
         aforoOk = AFORO_MAX > AFORO
         loginOk, id_vis = login(msg['name'], msg['password'])
+        loginOk = loginOk and not msg['name'] in LOGED
         if loginOk and aforoOk:
             AFORO += 1
+            LOGED.append(msg['name'])
             
             mapa, _ = getMap()
             firstPos = getRandomEmpty(mapa)
