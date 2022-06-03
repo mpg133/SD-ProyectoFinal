@@ -69,7 +69,7 @@ def handleVisitor(name, id_vis):
             if not msg['ok']:
                 break
     except:
-        print('Connection lost with visitor "'+name+'"')
+        pass
     finally:
         exit_delete_topics(mapa, id_vis, name)
             

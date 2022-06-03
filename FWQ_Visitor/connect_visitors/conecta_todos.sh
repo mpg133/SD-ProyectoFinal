@@ -7,6 +7,7 @@ done
 
 for vis in $(cat visitantes)
 do
-    ./$vis.sh
+    ./exec_$vis.sh
+    sleep 0.5
 done
 

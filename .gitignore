@@ -1,5 +1,7 @@
 FWQ_Registry/__pycache__
 FWQ_Visitor/__pycache__
+FWQ_Visitor/connect_visitors/exec*
+FWQ_Visitor/connect_visitors/fifo*
 FWQ_Engine/__pycache__
 FWQ_Sensor/__pycache__
 FWQ_Sensor/fisic_attractions/attr*
