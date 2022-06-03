@@ -15,6 +15,6 @@ echo "echo '$1' > fifo_$1" >> exec_$1.sh
 
 chmod +x exec_$1.sh
 
-for i in {0..5}; do cat fifo_$1; done | bash 
+for i in {0..6}; do cat fifo_$1 ; done | bash 
 
 

@@ -98,7 +98,7 @@ def main():
             mapa, _ = getMap()
             firstPos = getRandomEmpty(mapa)
             producer.send("loginResponsesTopic", {'ok': True, 'firstPos' : firstPos, 'id_vis': id_vis, 'msg' : 'Login ok'})
-            time.sleep(0.2)
+            time.sleep(0.3)
 
             new_thread = Thread(target=handleVisitor, args=(msg['name'], id_vis))
             new_thread.start()

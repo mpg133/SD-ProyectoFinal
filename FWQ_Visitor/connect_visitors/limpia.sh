@@ -1,3 +1,4 @@
 #!/bin/bash
 
-rm $(ls | grep -vE "conecta_vis.sh|limpia.sh|visitantes|conecta_todos.sh")
+rm exec_*
+rm fifo_*
