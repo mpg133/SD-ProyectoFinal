@@ -16,6 +16,8 @@ ENGINE_KAFKA_IP = config['ENGINE_KAFKA_IP']
 ENGINE_KAFKA_PORT = config['ENGINE_KAFKA_PORT']
 BROKER = ENGINE_KAFKA_IP +':'+ ENGINE_KAFKA_PORT
 
+LAST_ATTR = -1
+
 def mapaToString(mapa):
     string = "+------------------------------------------------------------+\n"
     for x in range(len(mapa)):
@@ -53,6 +55,8 @@ def parqueLogin(name, password):
 
 
 def entraAlParque(name, firstPos):
+    global LAST_ATTR
+
     producer = kp(bootstrap_servers=BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
     consumer = kc(name+'TopicRecv', bootstrap_servers = BROKER)
 
@@ -61,14 +65,17 @@ def entraAlParque(name, firstPos):
 
     toGo = -1
     pos = firstPos
+    nextPos = pos
     while True:
-        producer.send(name+'Topic', {'ok':True, 'pos' : pos, 'to_go' : toGo })
+        producer.send(name+'Topic', {'ok':True, 'pos' : pos, 'next_pos': nextPos, 'to_go' : toGo })
         msg = json.loads(next(consumer).value.decode('utf-8'))
+
+        pos = msg['new_pos']
         
         print(mapaToString(msg['mapa']))
 
-        pos, toGo = moveAuto(msg['mapa'], pos, msg['attrs'])
+        nextPos, toGo, LAST_ATTR = moveAuto(msg['mapa'], pos, msg['attrs'], name, LAST_ATTR)
 
-        time.sleep(1)
+        time.sleep(0.7)
 
 

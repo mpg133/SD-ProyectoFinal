@@ -22,6 +22,18 @@ my_id = ''
 
 def signalExit(signum, frame):
     print("\n\nEXIT")
+    inAttr = str(isInAttraction(name))
+    if inAttr != "-1":
+        with open('../FWQ_Sensor/fisic_attractions/attr'+inAttr+'.json', 'r') as a:
+            attr_queue = json.load(a)
+        try:
+            attr_queue.pop(name)
+        except:
+            pass
+        os.system('rm -rf ../FWQ_Sensor/fisic_attractions/attr'+inAttr+'.json')
+        with open('../FWQ_Sensor/fisic_attractions/attr'+inAttr+'.json', 'w') as a:
+            json.dump(attr_queue, a)
+
     try:
         prod = kp(bootstrap_servers=BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
         prod.send(name + 'Topic', {'ok' : False})

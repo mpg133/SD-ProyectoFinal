@@ -20,9 +20,11 @@ def main():
     id_attr = 1
     for i in range(20):
         for j in range(20):
-            if random.randrange(0,30) == 0:
-                cur.execute(' INSERT into attraction (wait_time) values('+str(random.randrange(15,31))+')')
-                os.system('touch FWQ_Sensor/attr'+str(id_attr)+'.josn')
+            if random.randrange(0,100) < 4:
+                #time = str(random.randrange(15,31))
+                time = str(0)
+                cur.execute(' INSERT into attraction (wait_time) values('+time+')')
+                os.system('echo {} > FWQ_Sensor/fisic_attractions/attr'+str(id_attr)+'.json')
                 mapa += str(id_attr) + ' '
                 id_attr += 1
             else:

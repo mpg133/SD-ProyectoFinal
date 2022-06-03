@@ -38,7 +38,7 @@ AFORO_MAX=int(config['AFORO_MAX'])
 AFORO=0
 
 def exit_delete_topics(mapa, id_vis, name):
-    updatePosition(mapa, id_vis, -1)
+    updatePosition(mapa, id_vis, -1 , -1)
     LOGED.remove(name)
     global AFORO
     AFORO -= 1
@@ -61,10 +61,10 @@ def handleVisitor(name, id_vis):
         while True:
             msg = json.loads(next(consumer).value.decode('utf-8'))
             mapa, attrs = getMap()
-            mapa = updatePosition(mapa, id_vis, msg['pos'])
+            mapa, newPos = updatePosition(mapa, id_vis, msg['pos'], msg['next_pos'])
             time.sleep(0.2)
 
-            producer.send(name+"TopicRecv", {'ok': True, 'mapa' : mapa , 'attrs' : attrs})
+            producer.send(name+"TopicRecv", {'ok': True, 'mapa' : mapa , 'attrs' : attrs, 'new_pos': newPos})
 
             if not msg['ok']:
                 break
@@ -98,6 +98,7 @@ def main():
             mapa, _ = getMap()
             firstPos = getRandomEmpty(mapa)
             producer.send("loginResponsesTopic", {'ok': True, 'firstPos' : firstPos, 'id_vis': id_vis, 'msg' : 'Login ok'})
+            time.sleep(0.2)
 
             new_thread = Thread(target=handleVisitor, args=(msg['name'], id_vis))
             new_thread.start()

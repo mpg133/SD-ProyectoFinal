@@ -40,18 +40,20 @@ def saveMap(mapa):
     conn.close()
 
 
-def updatePosition(mapa, id_vis, newPos):
+def updatePosition(mapa, id_vis, pos, newPos):
+    
+    if newPos != -1 and int(mapa[newPos[0]][newPos[1]]) < 0:
+        return mapa, pos
 
     for x in range(len(mapa)):
         for y in range(len(mapa[x])):
             if mapa[x][y] == "-"+str(id_vis):
                 mapa[x][y] = '0'
-
             if newPos != -1 and x == newPos[0] and y == newPos[1] and mapa[x][y] == '0':
                 mapa[x][y] = "-"+str(id_vis)
     saveMap(mapa)
     
-    return mapa
+    return mapa, newPos
 
 def getRandomEmpty(mapa):
     x = random.randrange(0,19)
