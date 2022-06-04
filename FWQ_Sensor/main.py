@@ -12,7 +12,6 @@ from dotenv import dotenv_values
 
 
 def signalExit(signum, frame):
-    print("\n CTRL+C APRETAO!!")
     os.system('rm -rf active_sensors/' + str(sensor_id) + ' 2>/dev/null')
     exit()
 

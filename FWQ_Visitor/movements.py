@@ -68,44 +68,62 @@ def minDist(positions, target):
 
 
 def enterAttraction(name, attr):
-    with open('../FWQ_Sensor/fisic_attractions/attr'+attr+'.json', 'r') as a:
-        attr_queue = json.load(a)
-    attr_queue[name] = 5
-    os.system('rm -rf ../FWQ_Sensor/fisic_attractions/attr'+attr+'.json')
-    with open('../FWQ_Sensor/fisic_attractions/attr'+attr+'.json', 'w') as a:
-        json.dump(attr_queue, a)
-
-def timePassed(name, attr):
-    #print(name + ' in ' + str(attr))
-    out = False
-    with open('../FWQ_Sensor/fisic_attractions/attr'+str(attr) + '.json', 'r') as a:
-        attr_queue = json.load(a)
-    if attr_queue[name] <= 0:
+    done = False
+    while not done:
         try:
-            attr_queue.pop(name)
+            with open('../FWQ_Sensor/fisic_attractions/attr'+attr+'.json', 'r') as a:
+                attr_queue = json.load(a)
+            attr_queue[name] = 5
+            os.system('rm -rf ../FWQ_Sensor/fisic_attractions/attr'+attr+'.json')
+            with open('../FWQ_Sensor/fisic_attractions/attr'+attr+'.json', 'w') as a:
+                json.dump(attr_queue, a)
+            done=True
         except:
             pass
-        out = True
 
-        os.system('rm -rf ../FWQ_Sensor/fisic_attractions/attr'+str(attr)+'.json')
-        with open('../FWQ_Sensor/fisic_attractions/attr' + str(attr) + '.json', 'w') as a:
-            json.dump(attr_queue, a)
+
+def timePassed(name, attr):
+    out = False
+    #print(name + ' in ' + str(attr))
+    try:
+        with open('../FWQ_Sensor/fisic_attractions/attr'+str(attr) + '.json', 'r') as a:
+            attr_queue = json.load(a)
+        if attr_queue[name] <= 0:
+            try:
+                attr_queue.pop(name)
+            except:
+                pass
+            out = True
+
+            os.system('rm -rf ../FWQ_Sensor/fisic_attractions/attr'+str(attr)+'.json')
+            with open('../FWQ_Sensor/fisic_attractions/attr' + str(attr) + '.json', 'w') as a:
+                json.dump(attr_queue, a)
+    except:
+        pass
 
     return out
+
     
 
 def isInAttraction(name):
+    done = False
     path = '../FWQ_Sensor/fisic_attractions/'
     files = os.listdir(path)
     files = [s for s in files if s[0:4] == 'attr']
-    for f in files:
-        with open(path+f,'r') as jfile:
-            attr_queue = json.load(jfile)
-            if name in attr_queue.keys():
-                id_attr = f[4:]
-                id_attr = id_attr[:-5]
-                return int(id_attr)
-    return -1
+    
+    while not done:
+        try:
+            id_attr = -1
+            for f in files:
+                with open(path+f,'r') as jfile:
+                    attr_queue = json.load(jfile)
+                    if name in attr_queue.keys():
+                        id_attr = int(f.replace('attr','').replace('.json', ''))
+                        break
+            done = True
+        except:
+            pass
+    return id_attr
 
 
 def moveAuto(mapa, pos, attrs, name, lastAt):
