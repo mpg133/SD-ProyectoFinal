@@ -50,5 +50,32 @@ cur.execute('insert into visitor(name, password) values("j", "'+pass_hash+'")')
 pass_hash = hashlib.md5(bytes("k", encoding="utf8")).hexdigest()
 cur.execute('insert into visitor(name, password) values("k", "'+pass_hash+'")')
 
+pass_hash = hashlib.md5(bytes("l", encoding="utf8")).hexdigest()
+cur.execute('insert into visitor(name, password) values("l", "'+pass_hash+'")')
+
+pass_hash = hashlib.md5(bytes("m", encoding="utf8")).hexdigest()
+cur.execute('insert into visitor(name, password) values("m", "'+pass_hash+'")')
+
+pass_hash = hashlib.md5(bytes("n", encoding="utf8")).hexdigest()
+cur.execute('insert into visitor(name, password) values("n", "'+pass_hash+'")')
+
+pass_hash = hashlib.md5(bytes("o", encoding="utf8")).hexdigest()
+cur.execute('insert into visitor(name, password) values("o", "'+pass_hash+'")')
+
+pass_hash = hashlib.md5(bytes("p", encoding="utf8")).hexdigest()
+cur.execute('insert into visitor(name, password) values("p", "'+pass_hash+'")')
+
+pass_hash = hashlib.md5(bytes("q", encoding="utf8")).hexdigest()
+cur.execute('insert into visitor(name, password) values("q", "'+pass_hash+'")')
+
+pass_hash = hashlib.md5(bytes("r", encoding="utf8")).hexdigest()
+cur.execute('insert into visitor(name, password) values("r", "'+pass_hash+'")')
+
+pass_hash = hashlib.md5(bytes("s", encoding="utf8")).hexdigest()
+cur.execute('insert into visitor(name, password) values("s", "'+pass_hash+'")')
+
+pass_hash = hashlib.md5(bytes("t", encoding="utf8")).hexdigest()
+cur.execute('insert into visitor(name, password) values("t", "'+pass_hash+'")')
+
 conn.commit()
 conn.close()
