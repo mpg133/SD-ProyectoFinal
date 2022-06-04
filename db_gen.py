@@ -7,7 +7,7 @@ import random
 import json
 
 os.system('rm -rf database.db 2>/dev/null')
-os.system('rm -rf FWQ_Sensor/attr* 2>/dev/null')
+os.system('rm -rf FWQ_Sensor/fisic_attractions/attr* 2>/dev/null')
 
 conn = sqlite3.connect('database.db')
 cur = conn.cursor()

@@ -12,8 +12,9 @@ from dotenv import dotenv_values
 
 
 def signalExit(signum, frame):
-    os.system('rm -rf active_sensors/' + str(sensor_id))
-    exit(1)
+    print("\n CTRL+C APRETAO!!")
+    os.system('rm -rf active_sensors/' + str(sensor_id) + ' 2>/dev/null')
+    exit()
 
 signal.signal(signal.SIGINT, signalExit)
 
@@ -22,18 +23,20 @@ ENGINE_KAFKA_IP = config['ENGINE_KAFKA_IP']
 ENGINE_KAFKA_PORT = config['ENGINE_KAFKA_PORT']
 BROKER = ENGINE_KAFKA_IP +':'+ ENGINE_KAFKA_PORT
 
+sensor_id = -1
+
 
 attrs = os.listdir('fisic_attractions')
-attrs = [a[0:-5] for a in attrs]
-attrs = [a[4:] for a in attrs]
+attrs = [ int(a.replace('.json', '').replace('attr','')) for a in attrs ]
 
-sensor_id = -1
 active_sensors = os.listdir('active_sensors')
+active_sensors = [int(a) for a in active_sensors]
+
 if len(active_sensors) == 0:
     sensor_id = 1
 else:
-    for i in range(len(active_sensors)):
-        if int(active_sensors[i]) != attrs[i]:
+    for i in range(len(attrs)):
+        if attrs[i] not in active_sensors:
             sensor_id = attrs[i]
 
 if sensor_id != -1:
@@ -62,8 +65,8 @@ while True:
         with open('../FWQ_Sensor/fisic_attractions/attr'+str(sensor_id)+'.json', 'w') as a:
             json.dump(attr_queue, a)
 
-        timePassed = random.randrange(1,4)
-        time.sleep(timePassed)
-
     except:
         pass
+    
+    timePassed = random.randrange(1,4)
+    time.sleep(timePassed)

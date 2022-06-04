@@ -21,20 +21,29 @@ start = datetime.now()
 end = start
 
 while True:
-    if end - start >= timedelta(seconds=1):
-        print(attrs)
-        start = datetime.now()
-    end = datetime.now()
 
     to_del = []
     for a in attrs:
         if attrs[a] == 0:
             to_del.append(a)
-
     for d in to_del:
         attrs.pop(d)
 
     msg = json.loads(next(consumer).value.decode('utf-8'))
-    attrs[msg['attr']] = msg['people_count'] * 5
+
+    attr_id = int(msg['attr'])
+
+    if attr_id in attrs.keys():
+        attrs.pop(attr_id)
+    
+    if msg['people_count'] != 0:
+        attrs[attr_id] = msg['people_count'] * 5
+
+    if end - start >= timedelta(seconds=1):
+        print(attrs)
+        start = datetime.now()
+    end = datetime.now()
+
+
 
     
