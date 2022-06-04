@@ -8,6 +8,14 @@ import json
 
 from datetime import datetime, timedelta
 
+
+class TodoServicer(todo_pb2_grpc.TodoServicer):
+    def requestWaitingTimes(self, request, context):
+        global attrs
+        response = todo_pb2.WaitingTimes(str(attrs))
+        return response
+
+
 config = dotenv_values(".env")
 
 KAFKA_IP = config['KAFKA_IP']
@@ -19,6 +27,9 @@ consumer = kc('SensorsTopic', bootstrap_servers = BROKER)
 attrs = {}
 start = datetime.now()
 end = start
+
+
+#PONER GRPC A ESCUCHAR AQUI
 
 while True:
 

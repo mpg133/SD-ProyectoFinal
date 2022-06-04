@@ -56,13 +56,16 @@ while True:
         prod = kp(bootstrap_servers=BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
         prod.send('SensorsTopic', {'attr': sensor_id, 'people_count' : len(names)})
 
-        if len(names) > 0:
-            attr_queue[names[0]] -= timePassed
 
-        os.system('rm -rf ../FWQ_Sensor/fisic_attractions/attr'+str(sensor_id)+'.json')
+        # Paso del tiempo
+        #if len(names) > 0:
+        #    attr_queue[names[0]] -= timePassed
 
-        with open('../FWQ_Sensor/fisic_attractions/attr'+str(sensor_id)+'.json', 'w') as a:
-            json.dump(attr_queue, a)
+        #os.system('rm -rf ../FWQ_Sensor/fisic_attractions/attr'+str(sensor_id)+'.json')
+
+        #with open('../FWQ_Sensor/fisic_attractions/attr'+str(sensor_id)+'.json', 'w') as a:
+        #    json.dump(attr_queue, a)
+        ##################
 
     except:
         pass

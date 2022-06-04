@@ -72,14 +72,58 @@ def handleVisitor(name, id_vis):
         pass
     finally:
         exit_delete_topics(mapa, id_vis, name)
-            
+
+
+def askTimes(stub):
+    msg = todo_pb2.EngineReq()
+    response = stub.requestWaitingTimes(msg)
+    response = json.loads(response.times_string_dict)
+
+    return response
+
+def listenWTS():
+
+    
+    stub=''
+    
+    while True:
+        try:
+            responseAttrs = askTimes(stub)
+
+
+
+            conn = sqlite3.connect('../database.db')
+            cur = conn.cursor()
+            cur.execute('SELECT * FROM attraction')
+            dbAttrs = cur.fetchall()
+            for a in dbAttrs:
+                if int(a[1]) != responseAttrs[a[0]]:
+                    cur.execute('update attraction set wait_time = '+responseAttrs[a[0]]+'where id = ' + a[0])
+                    # TODO ver si se puede hacer un solo commit fuera del for
+                    # watch -n1 "sqlite3 database.db 'select * from attraction'" ; para comprobar si el tiempo se modifica en la base de datos
+                    cur.commit()
+
+            conn.close()
+        except:
+            pass
+
+        time.sleep(1)
+        
+
+
+
+
 
 
 def main():
     global AFORO_MAX
     global AFORO
     global LOGED
-   
+
+    #new_thread = Thread(target=listenWTS)
+    #new_thread.start()
+
+
     login_consumer = kc("loginTopic", bootstrap_servers = BROKER)
     producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
 

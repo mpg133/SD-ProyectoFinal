@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+
+package todoPackage;
+
+service Todo{
+	rpc requestWaitingTimes(EngineReq) returns(WaitingTimes){}
+}
+
+message EngineReq{}
+
+message WaitingTimes{
+	string times_string_dict = 1;
+}
