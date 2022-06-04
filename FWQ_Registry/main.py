@@ -21,7 +21,6 @@ def json_serializer(data):
 config = dotenv_values(".env")
 
 REGISTRY_GRPC_PORT = config['REGISTRY_GRPC_PORT']
-REGISTRY_GRPC_IP = config['REGISTRY_GRPC_IP']
 
 class TodoServicer(todo_pb2_grpc.TodoServicer):
     
@@ -70,6 +69,7 @@ def main():
 
     global REGISTRY_GRPC_PORT
     global REGISTRY_GRPC_IP
+    
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     todo_pb2_grpc.add_TodoServicer_to_server(TodoServicer(), server)

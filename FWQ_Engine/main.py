@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from grpc_functs import *
 from map_funcs import *
 import os
 import json
@@ -30,8 +31,6 @@ config = dotenv_values(".env")
 KAFKA_IP = config['KAFKA_IP']
 KAFKA_PORT = config['KAFKA_PORT']
 BROKER = KAFKA_IP + ":" + KAFKA_PORT
-GRPC_WTS_IP = config['GRPC_WTS_IP']
-GRPC_WTS_PORT = config['GRPC_WTS_PORT']
 
 LOGED = []
 AFORO_MAX=int(config['AFORO_MAX'])
@@ -77,42 +76,35 @@ def handleVisitor(name, id_vis):
 def askTimes(stub):
     msg = todo_pb2.EngineReq()
     response = stub.requestWaitingTimes(msg)
-    response = json.loads(response.times_string_dict)
+    response = json.loads(response.times_string_dict.replace("'", "\""))
 
     return response
 
 def listenWTS():
+    time.sleep(1)
 
-    
-    stub=''
+    stub=iniciarGrpcSecure()
     
     while True:
         try:
             responseAttrs = askTimes(stub)
 
-
-
             conn = sqlite3.connect('../database.db')
             cur = conn.cursor()
             cur.execute('SELECT * FROM attraction')
             dbAttrs = cur.fetchall()
+            
             for a in dbAttrs:
-                if int(a[1]) != responseAttrs[a[0]]:
-                    cur.execute('update attraction set wait_time = '+responseAttrs[a[0]]+'where id = ' + a[0])
-                    # TODO ver si se puede hacer un solo commit fuera del for
-                    # watch -n1 "sqlite3 database.db 'select * from attraction'" ; para comprobar si el tiempo se modifica en la base de datos
-                    cur.commit()
+                if str(a[0]) in responseAttrs.keys() and a[1] != responseAttrs[str(a[0])] :
+                    cur.execute('update attraction set wait_time = '+str(responseAttrs[str(a[0])])+' where id = ' + str(a[0]))
+            conn.commit()
 
             conn.close()
         except:
-            pass
+           stub=iniciarGrpcSecure()
 
         time.sleep(1)
         
-
-
-
-
 
 
 def main():
@@ -120,8 +112,8 @@ def main():
     global AFORO
     global LOGED
 
-    #new_thread = Thread(target=listenWTS)
-    #new_thread.start()
+    new_thread = Thread(target=listenWTS)
+    new_thread.start()
 
 
     login_consumer = kc("loginTopic", bootstrap_servers = BROKER)
