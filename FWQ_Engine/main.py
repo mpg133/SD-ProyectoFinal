@@ -81,12 +81,14 @@ def askTimes(stub):
     return response
 
 def listenWTS():
-    time.sleep(1)
 
-    stub=iniciarGrpcSecure()
     
     while True:
+
+        stub=iniciarGrpcSecure()
+
         try:
+            
             responseAttrs = askTimes(stub)
 
             conn = sqlite3.connect('../database.db')
@@ -101,7 +103,7 @@ def listenWTS():
 
             conn.close()
         except:
-           stub=iniciarGrpcSecure()
+            pass
 
         time.sleep(1)
         
