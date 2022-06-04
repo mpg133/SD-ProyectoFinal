@@ -82,29 +82,27 @@ def askTimes(stub):
 
 def listenWTS():
 
-    
     while True:
 
-        stub=iniciarGrpcSecure()
-
         try:
-            
+            stub=iniciarGrpcSecure()
             responseAttrs = askTimes(stub)
 
             conn = sqlite3.connect('../database.db')
             cur = conn.cursor()
             cur.execute('SELECT * FROM attraction')
             dbAttrs = cur.fetchall()
-            
+
             for a in dbAttrs:
                 if str(a[0]) in responseAttrs.keys() and a[1] != responseAttrs[str(a[0])] :
                     cur.execute('update attraction set wait_time = '+str(responseAttrs[str(a[0])])+' where id = ' + str(a[0]))
             conn.commit()
-
             conn.close()
         except:
             pass
-
+        
+        mapa, _ = getMap()
+        print(mapaToString(mapa))
         time.sleep(1)
         
 
@@ -124,7 +122,6 @@ def main():
     while True:
         print("[LOGIN] Awaiting for info on Kafka Server")
         msg = json.loads(next(login_consumer).value.decode('utf-8'))
-        #print('attempt: ' + msg['name'])
         time.sleep(0.1)
 
         aforoOk = AFORO_MAX > AFORO

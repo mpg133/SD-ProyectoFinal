@@ -4,6 +4,26 @@ import sqlite3
 import re
 import random
 
+def mapaToString(mapa):
+    string = "+------------------------------------------------------------+\n"
+    for x in range(len(mapa)):
+        string += "|"
+        for y in range(len(mapa[x])):
+            if(int(mapa[x][y]) > 9):
+                string += mapa[x][y] + ' '
+            elif(int(mapa[x][y]) == 0):
+                string += '   '
+            elif(int(mapa[x][y]) < -9):
+                string += mapa[x][y]
+            elif(int(mapa[x][y]) < 0):
+                string += mapa[x][y] + ' '
+            else:
+                string += mapa[x][y] + '  '
+        string += "|\n"
+    string += "+------------------------------------------------------------+"
+
+    return string
+
 def getMap():
     conn = sqlite3.connect('../database.db')
     cur = conn.cursor()
