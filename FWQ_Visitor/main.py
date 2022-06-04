@@ -11,6 +11,7 @@ import json
 from kafka.admin import KafkaAdminClient
 
 import signal
+import time
 
 config = dotenv_values('.env')
 ENGINE_KAFKA_IP = config['ENGINE_KAFKA_IP']
