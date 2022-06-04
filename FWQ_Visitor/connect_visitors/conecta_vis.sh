@@ -12,14 +12,12 @@ else
     sleep 0.1
 
     echo "cd .." >&3
-    sleep 0.1
-    echo "pwd" >&3
-    sleep 0.1
+    echo "pwd > /dev/null" >&3
     echo "./main.py visitor_$1" >&3
     sleep 0.1
     echo "3" >&3
-    sleep 0.2
+    sleep 0.1
     echo "$1" >&3
-    sleep 0.2
+    sleep 0.1
     echo "$1" >&3
 fi

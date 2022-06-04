@@ -8,6 +8,9 @@ import json
 
 from datetime import datetime, timedelta
 
+import todo_pb2
+import todo_pb2_grpc
+
 
 class TodoServicer(todo_pb2_grpc.TodoServicer):
     def requestWaitingTimes(self, request, context):
