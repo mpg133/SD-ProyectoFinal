@@ -103,7 +103,11 @@ def listenWTS():
         
         mapa, _ = getMap()
         print(mapaToString(mapa))
-        time.sleep(1)
+        try:
+            time.sleep(1)    
+        except:
+            print("Adios :)")
+       
         
 
 

@@ -36,20 +36,19 @@ todo_pb2_grpc.add_TodoServicer_to_server(TodoServicer(), server)
 ########
 #options = (('grpc.ssl_target_name_override', "cn.from.cert.com",),)
 
-#ca_cert = open("client-cert.pem",'rb').read()
-#private_key = open("server-key.pem", 'rb').read()
-#certificate_chain = open("server-cert.pem", 'rb').read()
+ca_cert = open("client-cert2.pem",'rb').read()
+private_key = open("server-key2.pem", 'rb').read()
+certificate_chain = open("server-cert2.pem", 'rb').read()
 
-#credentials = grpc.ssl_server_credentials(
-#    [(private_key, certificate_chain)],
-#    root_certificates=ca_cert,
-#    require_client_auth=True
-#)
+credentials = grpc.ssl_server_credentials(
+    [(private_key, certificate_chain)],
+    root_certificates=ca_cert,
+    require_client_auth=True
+)
 
-#server.add_secure_port('[::]:' + GRPC_PORT, credentials)
+server.add_secure_port('[::]:' + GRPC_PORT, credentials)
 ######
 
-server.add_insecure_port('[::]:' + GRPC_PORT)
 server.start()
 print('Starting server. Listening on port ' + GRPC_PORT)
 
