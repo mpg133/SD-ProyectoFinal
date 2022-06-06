@@ -185,14 +185,26 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
     
     newPos = pos
 
-    if pos[0] < toGo[0]:
-        newPos = xUp(pos)
-    elif pos[0] > toGo[0]:
+    xDist = toGo[0] - pos[0]
+    if xDist > int(MAP_SIZE/2):
         newPos = xDown(pos)
+    elif xDist <= int(MAP_SIZE/2) and xDist > 0:
+        newPos = xUp(pos)
+    elif xDist > int(-MAP_SIZE/2) and xDist < 0:
+        newPos = xDown(pos)
+    elif xDist <= int(-MAP_SIZE/2):
+        newPos = xUp(pos)
 
-    if pos[1] < toGo[1]:
-        newPos = yUp(newPos)
-    elif pos[1] > toGo[1]:
+
+    yDist = toGo[1] - pos[1]
+    if yDist > int(MAP_SIZE/2):
         newPos = yDown(newPos)
+    elif yDist <= int(MAP_SIZE/2) and yDist > 0:
+        newPos = yUp(newPos)
+    elif yDist > int(-MAP_SIZE/2) and yDist < 0:
+        newPos = yDown(newPos)
+    elif yDist <= int(-MAP_SIZE/2):
+        newPos = yUp(newPos)
+
     #print("2" + str([(newPos if newPos in free else minDist(free, toGo)), toGo, lastAt, mapa[toGo[0]][toGo[1]]]))    
     return (newPos if newPos in free else minDist(free, toGo)), toGo, lastAt, mapa[toGo[0]][toGo[1]]
