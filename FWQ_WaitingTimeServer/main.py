@@ -26,6 +26,8 @@ KAFKA_IP = config['KAFKA_IP']
 KAFKA_PORT = config['KAFKA_PORT']
 BROKER = KAFKA_IP + ":" + KAFKA_PORT
 GRPC_PORT = config['GRPC_PORT']
+TIME_PERSON = config['TIME_PERSON']
+TIME_BASE_ATTR = config['TIME_BASE_ATTR']
 
 consumer = kc('SensorsTopic', bootstrap_servers = BROKER)
 
@@ -73,7 +75,7 @@ while True:
         attrs.pop(attr_id)
     
     if msg['people_count'] != 0:
-        attrs[attr_id] = msg['people_count'] * 5
+        attrs[attr_id] = msg['people_count'] * int(TIME_PERSON) + int(TIME_BASE_ATTR)
 
     if end - start >= timedelta(seconds=1):
         print(attrs)

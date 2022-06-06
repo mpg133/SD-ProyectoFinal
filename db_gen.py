@@ -22,7 +22,8 @@ def main():
         for j in range(20):
             if random.randrange(0,100) < 4:
                 #time = str(random.randrange(15,31))
-                time = str(0)
+                #time = str(0)
+                time="50"
                 cur.execute(' INSERT into attraction (wait_time) values('+time+')')
                 os.system('echo {} > FWQ_Sensor/fisic_attractions/attr'+str(id_attr)+'.json')
                 mapa += str(id_attr) + ' '
@@ -34,6 +35,8 @@ def main():
     cur.execute(' INSERT into map(id, content) values(1, "'+mapa+'") ')
     conn.commit()
     conn.close()
-
+    os.system('./insert_users.py')
+    os.system('rm -rf FWQ_Sensor/avtive_sensors/*')
+    os.system('ps aux | grep main.py | awk ' + "'" + '{print $2}'+ "'" +' | xargs -I{} kill {} 2>/dev/null')
 
 main()

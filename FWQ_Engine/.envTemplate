@@ -1,0 +1,7 @@
+KAFKA_IP="localhost"
+KAFKA_PORT="9092"
+
+GRPC_WTS_IP="localhost"
+GRPC_WTS_PORT="50052"
+
+AFORO_MAX=12

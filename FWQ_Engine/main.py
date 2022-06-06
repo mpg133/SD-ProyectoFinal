@@ -101,8 +101,8 @@ def listenWTS():
         except:
             pass
         
-        mapa, _ = getMap()
-        print(mapaToString(mapa))
+        #mapa, _ = getMap()
+        #print(mapaToString(mapa))
         try:
             time.sleep(1)    
         except:

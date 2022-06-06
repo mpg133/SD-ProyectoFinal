@@ -2,7 +2,7 @@
 
 from dotenv import dotenv_values
 from math import sqrt
-
+import random
 import os
 import json
 
@@ -28,8 +28,23 @@ def getMinTimeAttraction(attrs, lastAt):
     return val
 
 def getToGo(mapa, attrs, lastAt):
-    id_attr = getMinTimeAttraction(attrs, lastAt)
-    return id_attr, searchAttrById(mapa, id_attr)
+   
+
+    
+    attrs=attrs.copy()
+    try:
+        attrs.pop(lastAt)
+    except:
+        pass
+
+    keys = list(attrs.keys())
+    rand_attr= keys[random.randrange(0,len(keys))]
+    while attrs[str(rand_attr)] > 60 or searchAttrById(mapa, rand_attr) == None:
+        rand_attr= keys[random.randrange(0,len(keys))]
+       
+          
+    #id_attr = getMinTimeAttraction(attrs, lastAt)
+    return int(rand_attr), searchAttrById(mapa, rand_attr)
 
 
 def searchAttrById(mapa, att):
@@ -126,7 +141,7 @@ def isInAttraction(name):
     return id_attr
 
 
-def moveAuto(mapa, pos, attrs, name, lastAt):
+def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
     if lastAt != -1:
         mapa = mapa.copy()
         attrs = attrs.copy()
@@ -143,22 +158,35 @@ def moveAuto(mapa, pos, attrs, name, lastAt):
     if inAttr != -1:
         goOut = timePassed(name, inAttr)
         if not goOut:
-            return pos, pos, inAttr
+           # print("0" + str([pos, pos, inAttr, toGo]))
+            return pos, pos, inAttr, toGo
+        else:
+            toGo = -1
+    print("toGo: " + str(toGo))
+       
+    if toGo != -1 and attrs[str(toGo)] >= 60:
+        toGo = -1
 
-    id_attr, toGo = getToGo(mapa, attrs, lastAt)
-    occupied = neigh(mapa, pos, False)
-    if toGo in occupied:
+    if toGo == -1:
+        _, toGo = getToGo(mapa, attrs, lastAt)
+    else:
+        toGo=searchAttrById(mapa,toGo)
+
+
+    neight_occupied = neigh(mapa, pos, False)
+    if toGo in neight_occupied:
         #return pos
         enterAttraction(name, mapa[toGo[0]][toGo[1]])
-        return toGo, toGo, mapa[toGo[0]][toGo[1]]
+        #print("1" + str([toGo, toGo, mapa[toGo[0]][toGo[1]], mapa[toGo[0]][toGo[1]]]))
+        return toGo, toGo, mapa[toGo[0]][toGo[1]], mapa[toGo[0]][toGo[1]]
 
     free = neigh(mapa, pos, True)
     
     # pos[0]<toGo[0] abajo | pos[0]>toGo[0] arriba | pos[1]<toGo[1] derecha | pos[1]>toGo[1] izquierda
     
     newPos = pos
-    #print("pos: " + str(pos))
-    #print("toGo: " + str(toGo))
+    print("pos: " + str(pos))
+    print("toGo: " + str(toGo))
 
     if pos[0] < toGo[0]:
         newPos = xUp(pos)
@@ -169,5 +197,5 @@ def moveAuto(mapa, pos, attrs, name, lastAt):
         newPos = yUp(newPos)
     elif pos[1] > toGo[1]:
         newPos = yDown(newPos)
-        
-    return newPos if newPos in free else minDist(free, toGo), toGo, lastAt
+    #print("2" + str([(newPos if newPos in free else minDist(free, toGo)), toGo, lastAt, mapa[toGo[0]][toGo[1]]]))    
+    return (newPos if newPos in free else minDist(free, toGo)), toGo, lastAt, mapa[toGo[0]][toGo[1]]
