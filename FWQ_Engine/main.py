@@ -41,7 +41,7 @@ def exit_delete_topics(mapa, id_vis, name):
     LOGED.remove(name)
     global AFORO
     AFORO -= 1
-    print("[CLOSING CONNECTION] Visitor \"" + name + "\" disconnected.")
+    print("[X] CLOSING CONNECTION: Visitor \"" + name + "\" disconnected.")
     try:
         admin_client = KafkaAdminClient(bootstrap_servers=BROKER)
         admin_client.delete_topics(topics=[name + 'Topic', name + 'TopicRecv'])
@@ -53,7 +53,7 @@ def exit_delete_topics(mapa, id_vis, name):
 def handleVisitor(name, id_vis):
     consumer = kc(name + 'Topic', bootstrap_servers = BROKER, consumer_timeout_ms=3000)
     producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
-    print("[ESTABLISHED CONNECTION] Visitor \"" + name + "\" connected.")
+    print("[O] ESTABLISHED CONNECTION: Visitor \"" + name + "\" connected.")
     mapa = getMap()
 
     try:
@@ -101,8 +101,6 @@ def listenWTS():
         except:
             pass
         
-        #mapa, _ = getMap()
-        #print(mapaToString(mapa))
         try:
             time.sleep(1)    
         except:
@@ -124,7 +122,7 @@ def main():
     producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
 
     while True:
-        print("[LOGIN] Awaiting for info on Kafka Server")
+        print("[...] LOGIN: Awaiting for info on Kafka Server")
         msg = json.loads(next(login_consumer).value.decode('utf-8'))
         time.sleep(0.1)
 

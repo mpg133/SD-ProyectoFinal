@@ -162,7 +162,6 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
             return pos, pos, inAttr, toGo
         else:
             toGo = -1
-    print("toGo: " + str(toGo))
        
     if toGo != -1 and attrs[str(toGo)] >= 60:
         toGo = -1
@@ -185,8 +184,6 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
     # pos[0]<toGo[0] abajo | pos[0]>toGo[0] arriba | pos[1]<toGo[1] derecha | pos[1]>toGo[1] izquierda
     
     newPos = pos
-    print("pos: " + str(pos))
-    print("toGo: " + str(toGo))
 
     if pos[0] < toGo[0]:
         newPos = xUp(pos)

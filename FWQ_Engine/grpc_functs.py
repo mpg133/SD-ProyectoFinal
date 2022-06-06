@@ -15,7 +15,8 @@ def iniciarGrpcSecure():
     GRPC_WTS_IP = config['GRPC_WTS_IP']
     GRPC_WTS_PORT = config['GRPC_WTS_PORT']
 
-    channel = grpc.secure_channel(GRPC_WTS_IP +":"+GRPC_WTS_PORT,channel_creds)
+    #channel = grpc.secure_channel(GRPC_WTS_IP +":"+GRPC_WTS_PORT,channel_creds)
+    channel = grpc.insecure_channel(GRPC_WTS_IP +":"+GRPC_WTS_PORT)
 
    
     return todo_pb2_grpc.TodoStub(channel)

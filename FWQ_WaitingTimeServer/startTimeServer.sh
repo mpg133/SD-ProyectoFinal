@@ -1,6 +1,11 @@
 #!/bin/bash
 
-cp .envTemplate .env
+echo 'KAFKA_IP="localhost"' > .env
+echo 'KAFKA_PORT="9092"' >> .env
+echo 'GRPC_PORT="50052" ' >> .env
+echo 'TIME_PERSON=5' >> .env
+echo 'TIME_BASE_ATTR=50' >> .env
+
 
 if [ -z $1 ]
 then

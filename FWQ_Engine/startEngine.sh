@@ -1,5 +1,13 @@
 #!/bin/bash
 
+echo 'KAFKA_IP="localhost"'> .env
+echo 'KAFKA_PORT="9092"' >> .env
+echo >> .env
+echo 'GRPC_WTS_IP="localhost"' >> .env
+echo 'GRPC_WTS_PORT="50052"' >> .env
+echo >> .env
+echo 'AFORO_MAX=12' >> .env
+
 if [ -z $1 ]
 then
 	./main.py
