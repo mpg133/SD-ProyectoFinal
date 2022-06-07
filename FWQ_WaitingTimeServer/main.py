@@ -48,8 +48,8 @@ credentials = grpc.ssl_server_credentials(
     require_client_auth=True
 )
 
-#server.add_secure_port('[::]:' + GRPC_PORT, credentials)
-server.add_insecure_port('[::]:' + GRPC_PORT)
+server.add_secure_port('[::]:' + GRPC_PORT, credentials)
+#server.add_insecure_port('[::]:' + GRPC_PORT)
 ######
 
 server.start()

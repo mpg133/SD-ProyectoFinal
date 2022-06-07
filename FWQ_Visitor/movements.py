@@ -99,7 +99,6 @@ def enterAttraction(name, attr):
 
 def timePassed(name, attr):
     out = False
-    #print(name + ' in ' + str(attr))
     try:
         with open('../FWQ_Sensor/fisic_attractions/attr'+str(attr) + '.json', 'r') as a:
             attr_queue = json.load(a)
@@ -146,8 +145,6 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
         mapa = mapa.copy()
         attrs = attrs.copy()
         lastAtPos = searchAttrById(mapa, lastAt)
-        #print("\nlastAtt: " + str(lastAt))
-        #print("lastAtPos: " + str(lastAtPos))
         mapa[lastAtPos[0]][lastAtPos[1]] = 0
         try:
             attrs.pop(lastAt)
@@ -158,7 +155,6 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
     if inAttr != -1:
         goOut = timePassed(name, inAttr)
         if not goOut:
-           # print("0" + str([pos, pos, inAttr, toGo]))
             return pos, pos, inAttr, toGo
         else:
             toGo = -1
@@ -174,9 +170,7 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
 
     neight_occupied = neigh(mapa, pos, False)
     if toGo in neight_occupied:
-        #return pos
         enterAttraction(name, mapa[toGo[0]][toGo[1]])
-        #print("1" + str([toGo, toGo, mapa[toGo[0]][toGo[1]], mapa[toGo[0]][toGo[1]]]))
         return toGo, toGo, mapa[toGo[0]][toGo[1]], mapa[toGo[0]][toGo[1]]
 
     free = neigh(mapa, pos, True)
@@ -205,6 +199,5 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
         newPos = yDown(newPos)
     elif yDist <= int(-MAP_SIZE/2):
         newPos = yUp(newPos)
-
-    #print("2" + str([(newPos if newPos in free else minDist(free, toGo)), toGo, lastAt, mapa[toGo[0]][toGo[1]]]))    
+  
     return (newPos if newPos in free else minDist(free, toGo)), toGo, lastAt, mapa[toGo[0]][toGo[1]]
