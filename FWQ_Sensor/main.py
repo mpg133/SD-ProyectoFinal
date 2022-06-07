@@ -13,7 +13,8 @@ from dotenv import dotenv_values
 import sys
 
 def signalExit(signum, frame):
-    os.system('rm -rf active_sensors/' + str(sensor_id) + ' 2>/dev/null')
+    global sensor_id
+    print("\n\nCerrando sensor " + str(sensor_id))
     exit()
 
 signal.signal(signal.SIGINT, signalExit)
