@@ -28,6 +28,7 @@ def json_serializer(data):
 
 config = dotenv_values(".env")
 
+TIME_BASE_ATTR = config['TIME_BASE_ATTR']
 KAFKA_IP = config['KAFKA_IP']
 KAFKA_PORT = config['KAFKA_PORT']
 BROKER = KAFKA_IP + ":" + KAFKA_PORT
@@ -96,6 +97,9 @@ def listenWTS():
             for a in dbAttrs:
                 if str(a[0]) in responseAttrs.keys() and a[1] != responseAttrs[str(a[0])] :
                     cur.execute('update attraction set wait_time = '+str(responseAttrs[str(a[0])])+' where id = ' + str(a[0]))
+                elif not str(a[0]) in responseAttrs.keys() and  a[1] > int(TIME_BASE_ATTR):
+                    cur.execute('update attraction set wait_time = '+TIME_BASE_ATTR+' where id = ' + str(a[0]))
+
             conn.commit()
             conn.close()
         except:

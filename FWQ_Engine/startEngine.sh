@@ -7,6 +7,7 @@ echo 'GRPC_WTS_IP="localhost"' >> .env
 echo 'GRPC_WTS_PORT="50052"' >> .env
 echo >> .env
 echo 'AFORO_MAX=12' >> .env
+echo 'TIME_BASE_ATTR=50' >> .env
 
 if [ -z $1 ]
 then
