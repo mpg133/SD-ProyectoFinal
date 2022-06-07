@@ -1,7 +1,6 @@
 #!/bin/bash
 
 ps aux | grep main.py | awk '{print $2}' | xargs -I{} kill -s SIGKILL {} 2>/dev/null
-rm -rf FWQ_Sensor/active_sensors/* 2>/dev/null
 ./db_gen.py
 
 gnome-terminal --tab --title=Engine -- bash -c 'cd FWQ_Engine; ./startEngine.sh; bash'

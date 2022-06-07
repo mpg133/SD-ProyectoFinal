@@ -79,7 +79,7 @@ while True:
         attrs[attr_id] = msg['people_count'] * int(TIME_PERSON) + int(TIME_BASE_ATTR)
 
     if end - start >= timedelta(seconds=1):
-        print(attrs)
+        print(str(attrs) + ' | (last message from attraction '+str(msg['attr'])+')')
         start = datetime.now()
     end = datetime.now()
 
