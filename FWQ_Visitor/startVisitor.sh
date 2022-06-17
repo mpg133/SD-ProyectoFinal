@@ -5,6 +5,7 @@ echo 'REGISTRY_GRPC_IP="localhost"' >> .env
 echo 'REGISTRY_GRPC_PORT="50051"' >> .env
 echo 'ENGINE_KAFKA_IP="localhost"' >> .env
 echo 'ENGINE_KAFKA_PORT="9092"' >> .env
+echo 'API_URL="http://localhost:5000"'>> .env
 
 
 if [ -z $1 ]
@@ -37,7 +38,7 @@ else
 	then
 		./main.py
 		exit
-	else
+	
 	fi
 	./main.py
 fi

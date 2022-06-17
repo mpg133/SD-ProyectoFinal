@@ -1,5 +1,8 @@
 import sqlite3
 import hashlib
+import json
+from flask import jsonify
+
 
 
 def registra(name, password):
@@ -23,11 +26,40 @@ def registra(name, password):
     except:
         return False, ["ERROR al añadir a " + name + " al registro."]
 
+def seleccionaTodos():
+    conn = sqlite3.connect('../database.db')
+    cur = conn.cursor() 
+    try:
+        #el nombre ya existe
+        cur.execute('select id,name from visitor"')
+        users = cur.fetchall()
+        conn.commit()
+        conn.close()
+    except:
+        return False, ["ERROR al seleccionar los usuarios. (excepcion)"]
+   
 
+    return True,[ jsonify({ user[1] : user for user in users}) , "seleccionados correctamente."]
+    
+def seleccionaUser(name,password):
+    conn = sqlite3.connect('../database.db')
+    cur = conn.cursor() 
+    try:
+        #el nombre ya existe
+        #cur.execute('select id,name from visitor where name = "'+name+'" and password = "'password'""')
+        users = cur.fetchall()
+        conn.commit()
+        conn.close()
+    except:
+        return False, ["ERROR al seleccionar el usuario. (excepcion)"]
+
+    return True,[ jsonify({ user[1] : user for user in users}) , "seleccionado correctamente."]
+    
+      
 
 def edita(name, password, newName, newPassword):
     conn = sqlite3.connect('../database.db')
-    cur = conn.cursor();
+    cur = conn.cursor()
 
     #el nuevo nombre ya existe
     cur.execute('select * from visitor where name = "'+newName+'"')
@@ -55,8 +87,18 @@ def edita(name, password, newName, newPassword):
 
     return True, [str(user[0][0]), newName, 'Visitante editado correctamente.']
 
-
-
+def elimina(name,password):
+    conn = sqlite3.connect('../database.db')
+    cur = conn.cursor()
+    try:
+        #el nombre ya existe
+        cur.execute('delete from visitor where name = "'+name+'"')
+        conn.commit()
+        conn.close()
+    except:
+        return False, ["ERROR al eliminar usuario. (excepcion)"]
+   
+    return True,[ name , "eliminado correctamente."]
 
 
 

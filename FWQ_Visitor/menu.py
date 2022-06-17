@@ -1,21 +1,23 @@
 def menuOption():
     print('1. Registrar usuario')
     print('2. Editar usuario')
-    print('3. Entrar al parque')
-    print('4. Salir')
+    print('3. Registrar usuario via API')
+    print('4. Editar usuario via API')
+    print('5. Entrar al parque')
+    print('6. Salir')
     print()
     return input()
 
 def askCreds():
-    name = input('name: ')
-    password = input('password: ')
+    name = input('Insert name: ')
+    password = input('Insert password: ')
     return name, password
 
 def askNewCreds():
-    name = input('name: ')
-    password = input('password: ')
-    newName = input('name: ')
-    newPassword = input('password: ')
+    name = input('Insert name: ')
+    password = input('Insert password: ')
+    newName = input('Insert new name: ')
+    newPassword = input('Insert new password: ')
     return name, password, newName, newPassword
 
 

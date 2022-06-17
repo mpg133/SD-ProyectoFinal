@@ -1,23 +1,92 @@
 #!/usr/bin/python3
-
-from flask import Flask, jsonify
+from controller import *
+from datetime import datetime
+from flask import Flask, jsonify,request
 from dotenv import dotenv_values
+#from werkzeug.security import generate_password_hash, check_password_hash
 
 from controller import *
 
 app = Flask(__name__)
+#app.config['JSON_SORT_KEYS'] = False
+users = []
 
-@app.route('/register', methods=['PUT'])
-def reg():
-    #register(name, password)
-    data={
-            'ok' : True,
-            'id' : '1',
-            'name' : 'asd',
-            'msg' : 'de puta mare lokoooh'
-            }
 
-    return jsonify(data)
+#get all users
+@app.route('/user',methods = ['GET'])
+def getAllUsers():
+    try:
+        succes,data=seleccionaTodos(request.form.get('name'),request.form.get('password'))
+       
+    except:
+        return jsonify({'ok': False,'msg' : 'Error al seleccionar usuarios'}), 400
+    if succes:
+
+        return jsonify({'ok': True,'msg' : 'Usuarios seleccionados correctamente'}), 201
+    else:
+        return jsonify({'ok': False,'msg' : 'Error al seleccionar usuarios'}), 400
+
+
+
+#get user
+@app.route('/user', methods=['GET'])
+def getUser():
+    try:
+        succes,data=registra(request.form.get('name'),request.form.get('password'))
+       
+    except:
+        return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
+    if succes:
+
+        return jsonify({'ok': True,'msg' : 'Usuario creado correctamente'}), 201
+    else:
+        return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
+
+
+#create user
+@app.route('/user',methods=['POST'])
+def createUser():
+    try:
+        succes,data=registra(request.form.get('name'),request.form.get('password'))
+       
+    except:
+        return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
+    if succes:
+
+        return jsonify({'ok': True,'msg' : 'Usuario creado correctamente'}), 201
+    else:
+        return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
+
+
+#update user
+@app.route('/user', methods=['PUT'])
+def editUser():
+    try:
+        succes,data=edita(request.form.get('name'),request.form.get('password'),request.form.get('newName'),request.form.get('newPassword'))
+       
+    except:
+        return jsonify({'ok': False,'msg' : 'Excepción al editar el usuario'}), 400
+    if succes:
+
+        return jsonify({'ok': True,'msg' : 'Usuario editado correctamente'}), 201
+    else:
+        return jsonify({'ok': False,'msg' : 'Error al editar el usuario'}), 400
+
+
+@app.route('/user',methods=['DELETE'])
+def deleteUser():
+    try:
+        succes,data=elimina(request.form.get('name'),request.form.get('password'))
+       
+    except:
+        return jsonify({'ok': False,'msg' : 'Excepción al eliminar el usuario'}), 400
+    if succes:
+
+        return jsonify({'ok': True,'msg' : 'Usuario eliminado correctamente'}), 201
+    else:
+        return jsonify({'ok': False,'msg' : 'Error al eliminar el usuario'}), 400
+    
+
 
 
 if __name__ == '__main__':
