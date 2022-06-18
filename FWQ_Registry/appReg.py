@@ -3,12 +3,9 @@ from controller import *
 from datetime import datetime
 from flask import Flask, jsonify,request
 from dotenv import dotenv_values
-#from werkzeug.security import generate_password_hash, check_password_hash
 
-from controller import *
 
 app = Flask(__name__)
-#app.config['JSON_SORT_KEYS'] = False
 users = []
 
 #get all users
@@ -20,7 +17,7 @@ def getAllUsers():
         return jsonify({'ok': False,'msg' : 'Error en el acceso a la base de datos'}), 400
 
     if succes:
-        return jsonify(data[0]), 201
+        return jsonify(data[0]), 200
     else:
         return jsonify({'ok': False,'msg' : 'Error al seleccionar usuarios'}), 400
 
@@ -36,7 +33,7 @@ def getUser(name):
         return jsonify({'ok': False,'msg' : 'Error en el acceso a la base de datos'}), 400
 
     if succes:
-        return jsonify(data[0]), 201
+        return jsonify(data[0]), 200
     else:
         return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
 
@@ -64,7 +61,7 @@ def editUser():
         return jsonify({'ok': False,'msg' : 'Excepción al editar el usuario'}), 400
     if succes:
 
-        return jsonify({'ok': True,'msg' : 'Usuario editado correctamente'}), 201
+        return jsonify({'ok': True,'msg' : 'Usuario editado correctamente'}), 202
     else:
         return jsonify({'ok': False,'msg' : 'Error al editar el usuario'}), 400
 

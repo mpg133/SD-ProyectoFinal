@@ -8,6 +8,9 @@ echo 'GRPC_WTS_PORT="50052"' >> .env
 echo >> .env
 echo 'AFORO_MAX=12' >> .env
 echo 'TIME_BASE_ATTR=50' >> .env
+echo >> .env
+echo 'ENGINE_API_IP="localhost"'>> .env
+echo 'ENGINE_API_PORT="5001"' >> .env
 
 if [ -z $1 ]
 then

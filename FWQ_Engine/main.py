@@ -18,9 +18,13 @@ import time
 
 import signal
 
+os.system('./appEng.py &')
+
 def signalExit(signum, frame):
+    os.system("ps aux | grep appEng.py | awk '{print $2}' | xargs -I{} kill -9 {} 2>/dev/null")
     print("\n\nEXIT")
     exit(1)
+
 signal.signal(signal.SIGINT, signalExit)
 
 def json_serializer(data):
@@ -47,8 +51,8 @@ def exit_delete_topics(mapa, id_vis, name):
         admin_client = KafkaAdminClient(bootstrap_servers=BROKER)
         admin_client.delete_topics(topics=[name + 'Topic', name + 'TopicRecv'])
     except:
-        exit(1)
-    exit(1)
+        signalExit("","")
+    signalExit("","")
 
 
 def handleVisitor(name, id_vis):
@@ -147,5 +151,6 @@ def main():
 
         else:
             producer.send("loginResponsesTopic", {'ok': False, 'msg' : 'ERROR login' if aforoOk else 'Aforo completo'})
+            
 
 main()
