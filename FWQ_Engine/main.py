@@ -59,12 +59,11 @@ def handleVisitor(name, id_vis):
     consumer = kc(name + 'Topic', bootstrap_servers = BROKER, consumer_timeout_ms=3000)
     producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
     print("[O] ESTABLISHED CONNECTION: Visitor \"" + name + "\" connected.")
-    mapa = getMap()
 
     try:
         while True:
             msg = json.loads(next(consumer).value.decode('utf-8'))
-            mapa, attrs = getMap()
+            mapa, attrs, _ = getMap()
             mapa, newPos = updatePosition(mapa, id_vis, msg['pos'], msg['next_pos'])
             time.sleep(0.2)
 
@@ -139,7 +138,7 @@ def main():
             AFORO += 1
             LOGED.append(msg['name'])
             
-            mapa, _ = getMap()
+            mapa, _, _ = getMap()
             firstPos = getRandomEmpty(mapa)
             producer.send("loginResponsesTopic", {'ok': True, 'firstPos' : firstPos, 'id_vis': id_vis, 'msg' : 'Login ok'})
             time.sleep(0.3)

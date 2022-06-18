@@ -21,11 +21,11 @@ OPENWEATHER_API_KEY = config['OPENWEATHER_API_KEY']
 @app.route('/map',methods = ['GET'])
 def getMapApi():
     try:
-        mapa,attrsDict = getMap()
+        mapa, attrsDict, vis_arr = getMap()
     except:
         return jsonify({'ok': False,'msg' : 'Error en el acceso a la base de datos'}), 400
 
-    return jsonify({'mapa': mapa, 'attrs' : attrsDict}), 201
+    return jsonify({'mapa': mapa, 'attrs' : attrsDict, 'visitors': vis_arr}), 201
 
 
 @app.route('/weather',methods = ['GET'])

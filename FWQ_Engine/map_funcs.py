@@ -22,9 +22,15 @@ def getMap():
     for i in attrs:
         attrs_dict[str(i[0])] = i[1]
 
+    cur.execute('select * from visitor')
+    attrs = cur.fetchall()
+    vis_arr = []
+    for i in attrs:
+        vis_arr.append({'id':str(i[0]) , 'name' : str(i[1]), 'status' : str(i[3])})
+
     conn.close()
 
-    return mapa, attrs_dict
+    return mapa, attrs_dict, vis_arr
 
 def saveMap(mapa, vis, visStatus):
     string = ''
