@@ -1,4 +1,5 @@
 FWQ_Registry/__pycache__
+FWQ_Registry/logs.txt
 FWQ_Visitor/__pycache__
 FWQ_Visitor/connect_visitors/exec*
 FWQ_Visitor/connect_visitors/fifo*
