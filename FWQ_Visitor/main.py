@@ -3,6 +3,7 @@
 from dentro_parque import *
 from menu import *
 from movements import *
+from API_functs import *
 from grpc_functs import *
 
 from dotenv import dotenv_values
@@ -58,7 +59,7 @@ def main():
     stub = iniciarGrpcSecure()
     
     option = "0"
-    while option != "4":
+    while option != "6":
         option = menuOption()
 
         if option == "1":
@@ -72,12 +73,22 @@ def main():
             print(id)
             print(msg)
         elif option == "3":
+            #registrar usuario via API
+            name, password = askCreds()
+            ok,msg = registrarVisitanteAPI(name,password)
+            print(msg)
+        elif option == "4":
+            #editar usuario via API
+            name, password, newName, newPassword = askNewCreds()
+            ok,msg = editarVisitanteAPI(name,password,newName,newPassword)
+            print(msg)
+        elif option == "5":
             name, password = askCreds()
             print('entrar al parque')
             loginOk, firstPos, my_id = parqueLogin(name, password)
             if(loginOk):
                 entraAlParque(name, firstPos)
-        elif option == "4":
+        elif option == "6":
             signalExit('','')
 
 
