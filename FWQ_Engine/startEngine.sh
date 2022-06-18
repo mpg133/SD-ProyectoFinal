@@ -11,6 +11,8 @@ echo 'TIME_BASE_ATTR=50' >> .env
 echo >> .env
 echo 'ENGINE_API_IP="localhost"'>> .env
 echo 'ENGINE_API_PORT="5001"' >> .env
+echo >> .env
+echo 'OPENWEATHER_API_KEY="a2e995048d63cb5174cd5ca15f3f0b9b"'>> .env
 
 if [ -z $1 ]
 then
