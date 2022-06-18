@@ -51,8 +51,8 @@ def exit_delete_topics(mapa, id_vis, name):
         admin_client = KafkaAdminClient(bootstrap_servers=BROKER)
         admin_client.delete_topics(topics=[name + 'Topic', name + 'TopicRecv'])
     except:
-        signalExit("","")
-    signalExit("","")
+        exit(1)
+    exit(1)
 
 
 def handleVisitor(name, id_vis):
