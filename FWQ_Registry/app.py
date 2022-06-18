@@ -11,34 +11,32 @@ app = Flask(__name__)
 #app.config['JSON_SORT_KEYS'] = False
 users = []
 
-
 #get all users
 @app.route('/user',methods = ['GET'])
 def getAllUsers():
     try:
-        succes,data=seleccionaTodos(request.form.get('name'),request.form.get('password'))
-       
+        succes,data=seleccionaTodos()
     except:
-        return jsonify({'ok': False,'msg' : 'Error al seleccionar usuarios'}), 400
-    if succes:
+        return jsonify({'ok': False,'msg' : 'Error en el acceso a la base de datos'}), 400
 
-        return jsonify({'ok': True,'msg' : 'Usuarios seleccionados correctamente'}), 201
+    if succes:
+        return jsonify(data[0]), 201
     else:
         return jsonify({'ok': False,'msg' : 'Error al seleccionar usuarios'}), 400
 
 
 
 #get user
-@app.route('/user', methods=['GET'])
-def getUser():
+@app.route('/user/<name>', methods=['GET'])
+def getUser(name):
+    print(name)
     try:
-        succes,data=registra(request.form.get('name'),request.form.get('password'))
-       
+        succes,data=seleccionaUser('name')
     except:
-        return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
-    if succes:
+        return jsonify({'ok': False,'msg' : 'Error en el acceso a la base de datos'}), 400
 
-        return jsonify({'ok': True,'msg' : 'Usuario creado correctamente'}), 201
+    if succes:
+        return jsonify(data[0]), 201
     else:
         return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
 
@@ -48,11 +46,10 @@ def getUser():
 def createUser():
     try:
         succes,data=registra(request.form.get('name'),request.form.get('password'))
-       
     except:
         return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
-    if succes:
 
+    if succes:
         return jsonify({'ok': True,'msg' : 'Usuario creado correctamente'}), 201
     else:
         return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
@@ -63,7 +60,6 @@ def createUser():
 def editUser():
     try:
         succes,data=edita(request.form.get('name'),request.form.get('password'),request.form.get('newName'),request.form.get('newPassword'))
-       
     except:
         return jsonify({'ok': False,'msg' : 'Excepción al editar el usuario'}), 400
     if succes:
@@ -77,16 +73,14 @@ def editUser():
 def deleteUser():
     try:
         succes,data=elimina(request.form.get('name'),request.form.get('password'))
-       
     except:
         return jsonify({'ok': False,'msg' : 'Excepción al eliminar el usuario'}), 400
-    if succes:
 
+    if succes:
         return jsonify({'ok': True,'msg' : 'Usuario eliminado correctamente'}), 201
     else:
         return jsonify({'ok': False,'msg' : 'Error al eliminar el usuario'}), 400
     
-
 
 
 if __name__ == '__main__':

@@ -15,7 +15,7 @@ else
     echo "pwd > /dev/null" >&3
     echo "./main.py visitor_$1" >&3
     sleep 0.1
-    echo "3" >&3
+    echo "5" >&3
     sleep 0.1
     echo "$1" >&3
     sleep 0.1

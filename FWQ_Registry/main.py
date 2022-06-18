@@ -14,6 +14,9 @@ from dotenv import dotenv_values
 import todo_pb2
 import todo_pb2_grpc
 
+
+os.system("./app.py &")
+
 def json_serializer(data):
     return json.dumps(data).encode('utf-8')
 
@@ -94,6 +97,7 @@ def main():
         while True:
             time.sleep(86400)
     except KeyboardInterrupt:
+        os.system("ps aux | grep app.py | awk '{print $2}' | xargs -I{} kill -9 {} 2>/dev/null")
         server.stop(1)
     
 

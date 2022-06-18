@@ -31,7 +31,7 @@ def seleccionaTodos():
     cur = conn.cursor() 
     try:
         #el nombre ya existe
-        cur.execute('select id,name from visitor"')
+        cur.execute('select id,name from visitor')
         users = cur.fetchall()
         conn.commit()
         conn.close()
@@ -39,21 +39,32 @@ def seleccionaTodos():
         return False, ["ERROR al seleccionar los usuarios. (excepcion)"]
    
 
-    return True,[ jsonify({ user[1] : user for user in users}) , "seleccionados correctamente."]
+    result = {}
+    for i in range(len(users)):
+        result[i] = {}
+        for u in users[i]:
+            result[i]['id'] = users[i][0]
+            result[i]['name'] = users[i][1]
+
+    return True, [result , "seleccionados correctamente."]
     
-def seleccionaUser(name,password):
+def seleccionaUser(name):
     conn = sqlite3.connect('../database.db')
     cur = conn.cursor() 
     try:
         #el nombre ya existe
-        #cur.execute('select id,name from visitor where name = "'+name+'" and password = "'password'""')
-        users = cur.fetchall()
-        conn.commit()
+        cur.execute('select id,name from visitor where name = "'+name+'"')
+        user = cur.fetchall()
+        u = {}
+        if len(user) > 0:
+            u['id'] = user[0][0]
+            u['name'] = user[0][1]
+
         conn.close()
     except:
         return False, ["ERROR al seleccionar el usuario. (excepcion)"]
-
-    return True,[ jsonify({ user[1] : user for user in users}) , "seleccionado correctamente."]
+    
+    return True,[ u , "seleccionado correctamente."]
     
       
 
