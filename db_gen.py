@@ -11,7 +11,7 @@ os.system('rm -rf FWQ_Sensor/fisic_attractions/attr* 2>/dev/null')
 
 conn = sqlite3.connect('database.db')
 cur = conn.cursor()
-cur.execute(''' CREATE TABLE visitor (id INTEGER PRIMARY KEY AUTOINCREMENT, name UNIQUE, password ) ''')
+cur.execute(''' CREATE TABLE visitor (id INTEGER PRIMARY KEY AUTOINCREMENT, name UNIQUE, password, status) ''')
 cur.execute(''' CREATE TABLE attraction (id INTEGER PRIMARY KEY AUTOINCREMENT, wait_time ) ''')
 cur.execute(''' CREATE TABLE map ( id INTEGER PRIMARY KEY, content ) ''')
 

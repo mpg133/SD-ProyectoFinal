@@ -52,7 +52,6 @@ def getUser(name):
 @app.route('/user',methods=['POST'])
 def createUser():
 
-    #TODO falta la ip y los parametros/descripcion del evento en los logs
     dt = datetime.now()
     try:
         success,data=registra(request.form.get('name'),request.form.get('password'))
@@ -72,7 +71,6 @@ def createUser():
 @app.route('/user', methods=['PUT'])
 def editUser():
 
-    #TODO falta la ip y los parametros/descripcion del evento en los logs
     dt = datetime.now()
     try:
         success,data=edita(request.form.get('name'),request.form.get('password'),request.form.get('newName'),request.form.get('newPassword'))
@@ -91,7 +89,6 @@ def editUser():
 @app.route('/user',methods=['DELETE'])
 def deleteUser():
 
-    #TODO falta la ip y los parametros/descripcion del evento en los logs
     dt = datetime.now()
     try:
         success,data=elimina(request.form.get('name'),request.form.get('password'))

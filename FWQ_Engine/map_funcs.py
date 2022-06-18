@@ -26,7 +26,7 @@ def getMap():
 
     return mapa, attrs_dict
 
-def saveMap(mapa):
+def saveMap(mapa, vis, visStatus):
     string = ''
     for x in range(len(mapa)):
         for y in range(len(mapa[x])):
@@ -36,22 +36,37 @@ def saveMap(mapa):
     conn = sqlite3.connect('../database.db')
     cur = conn.cursor()
     cur.execute('update map set content ="'+string+'" where id = 1')
+    
+    if visStatus != None:
+        cur.execute('update visitor set status = "'+str(visStatus)+'" where id = '+str(vis))
+
     conn.commit()
     conn.close()
 
 
 def updatePosition(mapa, id_vis, pos, newPos):
-    
+    visStatus = None
     if newPos != -1 and int(mapa[newPos[0]][newPos[1]]) < 0:
         return mapa, pos
+
+    if newPos == -1:
+        mapa = [ m if m != '-'+str(id_vis) else '0' for m in mapa]
+        saveMap(mapa, id_vis, 'disconnected')
+        return 
+        
 
     for x in range(len(mapa)):
         for y in range(len(mapa[x])):
             if mapa[x][y] == "-"+str(id_vis):
                 mapa[x][y] = '0'
-            if newPos != -1 and x == newPos[0] and y == newPos[1] and mapa[x][y] == '0':
-                mapa[x][y] = "-"+str(id_vis)
-    saveMap(mapa)
+            if x == newPos[0] and y == newPos[1]:
+                if mapa[x][y] == '0':
+                    visStatus = "walking"
+                    mapa[x][y] = "-"+str(id_vis)
+                else:
+                    visStatus = str(mapa[x][y])
+
+    saveMap(mapa, id_vis, visStatus)
     
     return mapa, newPos
 

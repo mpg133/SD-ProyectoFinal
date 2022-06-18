@@ -12,4 +12,4 @@ gnome-terminal --tab --title=Sensor -- bash -c 'cd FWQ_Sensor; ./enciende_todos.
 sleep 0.1
 gnome-terminal --tab -- bash -c 'cd FWQ_Visitor/connect_visitors ; ./enciende_todos.sh; cd ../.. ; ./time_pass.py'
 
-#watch -n 0.1 "sqlite3 database.db 'select * from attraction'"
+watch -n 0.1 "sqlite3 database.db 'select * from visitor'"
