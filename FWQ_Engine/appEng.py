@@ -28,12 +28,20 @@ def getMapApi():
     return jsonify({'mapa': mapa, 'attrs' : attrsDict, 'visitors': vis_arr}), 201
 
 
-@app.route('/weather',methods = ['GET'])
-def getWeather():
-    response = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=48.872636&lon=2.776715&appid='+OPENWEATHER_API_KEY)
+@app.route('/weather/<ciudad>',methods = ['GET'])
+def getWeather(ciudad):
+    dic =  {'Madrid': {'lat' : '40.4167047', 'lon' : '-3.7035825' },
+            'Toronto':{'lat': '43.6534817' , 'lon': '-79.3839347' },
+            'Paris': {'lat': '48.8588897' , 'lon': '2.320041'}, 
+            'Oslo': {'lat': '59.9133301', 'lon': '10.7389701' }}
+    #`https://api.openweathermap.org/data/2.5/weather?q=${location}&units=imperial&appid=895284fb2d2c50a520ea537456963d9c`
+
+    response= requests.get('https://api.openweathermap.org/data/2.5/weather?lat='+dic[ciudad]['lat']+'&lon='+dic[ciudad]['lon']+'&appid='+OPENWEATHER_API_KEY)
+    
     #devuelve la temperatura en ºC:
     # ºK - 273.15 = ºC  
     return str(round(json.loads(response.text)['main']['temp'] - 273.15, 2))
+    
 
 
 if __name__ == '__main__':

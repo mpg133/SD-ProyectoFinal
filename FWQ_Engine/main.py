@@ -31,7 +31,7 @@ def json_serializer(data):
     return json.dumps(data).encode('utf-8')
 
 config = dotenv_values(".env")
-
+CIUDADES = ['Madrid','Toronto','Paris','Oslo']
 TIME_BASE_ATTR = config['TIME_BASE_ATTR']
 KAFKA_IP = config['KAFKA_IP']
 KAFKA_PORT = config['KAFKA_PORT']
@@ -118,11 +118,11 @@ def main():
     global AFORO_MAX
     global AFORO
     global LOGED
-
+    global CIUDADES
     new_thread = Thread(target=listenWTS)
     new_thread.start()
 
-
+    
     login_consumer = kc("loginTopic", group_id='engines', bootstrap_servers = BROKER)
     producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
 
