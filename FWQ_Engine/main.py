@@ -122,7 +122,7 @@ def main():
     new_thread.start()
 
 
-    login_consumer = kc("loginTopic", bootstrap_servers = BROKER)
+    login_consumer = kc("loginTopic", group_id='engines', bootstrap_servers = BROKER)
     producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
 
     while True:

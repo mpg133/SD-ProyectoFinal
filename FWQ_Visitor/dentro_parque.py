@@ -6,6 +6,8 @@ import time
 from kafka import KafkaProducer as kp
 from kafka import KafkaConsumer as kc
 
+from kafka import TopicPartition
+
 from dotenv import dotenv_values
 from menu import *
 
@@ -39,9 +41,15 @@ def mapaToString(mapa):
     return string
 
 def parqueLogin(name, password):
+
+    #TODO repartir trabajo entre los topics del engine
+    consumer = kc("loginTopic", bootstrap_servers = BROKER)
+    parts = consumer.partitions_for_topic("loginTopic")
+    #print(parts)
+
     prod = kp(bootstrap_servers=BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
     cons = kc("loginResponsesTopic", bootstrap_servers = BROKER)
-    prod.send('loginTopic', {'name' : name, 'password' : password})
+    prod.send('loginTopic', {'name' : name, 'password' : password},partition=0)
     
     print("Esperando respuesta del login...")
     msg = json.loads(next(cons).value.decode('utf-8'))

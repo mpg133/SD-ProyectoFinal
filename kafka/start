@@ -1,0 +1,8 @@
+#!/bin/bash
+
+kaf=$(ls | grep kafka_2.13)
+
+gnome-terminal -t zookeper --tab -- $kaf/bin/zookeeper-server-start.sh $kaf/config/zookeeper.properties
+sleep 0.1
+gnome-terminal -t kafka --tab -- $kaf/bin/kafka-server-start.sh $kaf/config/server.properties
+

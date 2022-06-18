@@ -27,7 +27,7 @@ def registra(name, password):
 
 def edita(name, password, newName, newPassword):
     conn = sqlite3.connect('../database.db')
-    cur = conn.cursor();
+    cur = conn.cursor()
 
     #el nuevo nombre ya existe
     cur.execute('select * from visitor where name = "'+newName+'"')
