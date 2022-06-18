@@ -14,6 +14,8 @@ from dotenv import dotenv_values
 import todo_pb2
 import todo_pb2_grpc
 
+from datetime import datetime
+
 
 os.system("./appReg.py &")
 
@@ -25,40 +27,60 @@ config = dotenv_values(".env")
 
 REGISTRY_GRPC_PORT = config['REGISTRY_GRPC_PORT']
 
+def logIntoFile(line):
+    with open('log.txt', 'a') as logFile:
+        logFile.write('\n')
+        logFile.write(line)
+
+
 class TodoServicer(todo_pb2_grpc.TodoServicer):
-    
+
     def registrarVisitante(self, request, context):
+    
+        #TODO falta la ip y los parametros/descripcion del evento en los logs
+
         response = todo_pb2.RegReturns()
         ok, resp = registra(request.name, request.password)
         response.ok = ok
         
+        dt = datetime.now()
+
         if ok:
             response.id = resp[0]
             response.name = resp[1]
             response.msg = "Usuario registrado."
-            print('Usuario "' + request.name + '" registrado.')
+            logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ALTA] via GRPC: "' + resp[1] + '"')
         else:
             response.id="-1"
             response.name="null"
             response.msg = resp[0]
+            logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de registro de usuario via GRPC')
 
         return response
 
 
     def editarVisitante(self, request, context):
+
+        #TODO falta la ip y los parametros/descripcion del evento en los logs
+
         response = todo_pb2.RegReturns()
         ok, resp = edita(request.name, request.password, request.newName, request.newPassword)
         response.ok = ok
+        
+        dt = datetime.now()
 
         if ok:
             response.id = resp[0]
             response.name = resp[1]
             response.msg = resp[2]
-            print('Usuario "'+request.name+'" editado.')
+            logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', MODIFICACION] via GRPC "' + resp[1] + '"')
+            print('Usuario "'+request.name+'" editado')
         else:
             response.id = "-1"
             response.name = "null"
             response.msg=resp[0]
+            logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de modificacion de usuario via GRPC')
+            print('Error al editar usuario')
 
         return response
 

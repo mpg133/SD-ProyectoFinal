@@ -4,6 +4,16 @@ from datetime import datetime
 from flask import Flask, jsonify,request
 from dotenv import dotenv_values
 
+from datetime import datetime
+
+
+
+def logIntoFile(line):
+    with open('log.txt', 'a') as logFile:
+        logFile.write('\n')
+        logFile.write(line)
+
+
 
 app = Flask(__name__)
 users = []
@@ -12,11 +22,11 @@ users = []
 @app.route('/user',methods = ['GET'])
 def getAllUsers():
     try:
-        succes,data=seleccionaTodos()
+        success,data=seleccionaTodos()
     except:
         return jsonify({'ok': False,'msg' : 'Error en el acceso a la base de datos'}), 400
 
-    if succes:
+    if success:
         return jsonify(data[0]), 200
     else:
         return jsonify({'ok': False,'msg' : 'Error al seleccionar usuarios'}), 400
@@ -28,11 +38,11 @@ def getAllUsers():
 def getUser(name):
     print(name)
     try:
-        succes,data=seleccionaUser('name')
+        success,data=seleccionaUser('name')
     except:
         return jsonify({'ok': False,'msg' : 'Error en el acceso a la base de datos'}), 400
 
-    if succes:
+    if success:
         return jsonify(data[0]), 200
     else:
         return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
@@ -41,43 +51,60 @@ def getUser(name):
 #create user
 @app.route('/user',methods=['POST'])
 def createUser():
+
+    #TODO falta la ip y los parametros/descripcion del evento en los logs
+    dt = datetime.now()
     try:
-        succes,data=registra(request.form.get('name'),request.form.get('password'))
+        success,data=registra(request.form.get('name'),request.form.get('password'))
     except:
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de registro de usuario via API')
         return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
 
-    if succes:
+    if success:
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ALTA] via API: "' + request.form.get('name') + '"')
         return jsonify({'ok': True,'msg' : 'Usuario creado correctamente'}), 201
     else:
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de registro de usuario via API')
         return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
 
 
 #update user
 @app.route('/user', methods=['PUT'])
 def editUser():
-    try:
-        succes,data=edita(request.form.get('name'),request.form.get('password'),request.form.get('newName'),request.form.get('newPassword'))
-    except:
-        return jsonify({'ok': False,'msg' : 'Excepción al editar el usuario'}), 400
-    if succes:
 
+    #TODO falta la ip y los parametros/descripcion del evento en los logs
+    dt = datetime.now()
+    try:
+        success,data=edita(request.form.get('name'),request.form.get('password'),request.form.get('newName'),request.form.get('newPassword'))
+    except:
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de modificacion de usuario via API')
+        return jsonify({'ok': False,'msg' : 'Excepción al editar el usuario'}), 400
+
+    if success:
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', MODIFICACION] via API: "' + request.form.get('name') + '" to "' + request.form.get('newName') + '"')
         return jsonify({'ok': True,'msg' : 'Usuario editado correctamente'}), 202
     else:
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de modificacion de usuario via API')
         return jsonify({'ok': False,'msg' : 'Error al editar el usuario'}), 400
 
 
 @app.route('/user',methods=['DELETE'])
 def deleteUser():
-    try:
-        succes,data=elimina(request.form.get('name'),request.form.get('password'))
-    except:
-        return jsonify({'ok': False,'msg' : 'Excepción al eliminar el usuario'}), 400
 
-    if succes:
-        return jsonify({'ok': True,'msg' : 'Usuario eliminado correctamente'}), 201
+    #TODO falta la ip y los parametros/descripcion del evento en los logs
+    dt = datetime.now()
+    try:
+        success,data=elimina(request.form.get('name'),request.form.get('password'))
+    except:
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de eliminación de usuario via API')
+        return jsonify({'ok': False,'msg' : 'Excepción al dar de baja el usuario'}), 400
+
+    if success:
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', BAJA] via API: "' + request.form.get('name') + '"')
+        return jsonify({'ok': True,'msg' : 'Usuario dado de baja correctamente'}), 201
     else:
-        return jsonify({'ok': False,'msg' : 'Error al eliminar el usuario'}), 400
-    
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de eliminación de usuario via API')
+        return jsonify({'ok': False,'msg' : 'Error al dar de baja el usuario'}), 400
 
 
 if __name__ == '__main__':
