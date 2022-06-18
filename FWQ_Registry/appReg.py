@@ -57,14 +57,14 @@ def createUser():
     try:
         success,data=registra(request.form.get('name'),request.form.get('password'))
     except:
-        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de registro de usuario via API')
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] '+request.remote_addr+' Error de registro de usuario via API')
         return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
 
     if success:
-        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ALTA] via API: "' + request.form.get('name') + '"')
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ALTA] '+request.remote_addr+' via API: "' + request.form.get('name') + '"')
         return jsonify({'ok': True,'msg' : 'Usuario creado correctamente'}), 201
     else:
-        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de registro de usuario via API')
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] '+request.remote_addr+' Error de registro de usuario via API')
         return jsonify({'ok': False,'msg' : 'Error al crear el usuario'}), 400
 
 
@@ -77,14 +77,14 @@ def editUser():
     try:
         success,data=edita(request.form.get('name'),request.form.get('password'),request.form.get('newName'),request.form.get('newPassword'))
     except:
-        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de modificacion de usuario via API')
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] '+request.remote_addr+' Error de modificacion de usuario via API')
         return jsonify({'ok': False,'msg' : 'Excepción al editar el usuario'}), 400
 
     if success:
-        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', MODIFICACION] via API: "' + request.form.get('name') + '" to "' + request.form.get('newName') + '"')
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', MODIFICACION] '+request.remote_addr+' via API: "' + request.form.get('name') + '" to "' + request.form.get('newName') + '"')
         return jsonify({'ok': True,'msg' : 'Usuario editado correctamente'}), 202
     else:
-        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de modificacion de usuario via API')
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] '+request.remote_addr+' Error de modificacion de usuario via API')
         return jsonify({'ok': False,'msg' : 'Error al editar el usuario'}), 400
 
 
@@ -96,14 +96,14 @@ def deleteUser():
     try:
         success,data=elimina(request.form.get('name'),request.form.get('password'))
     except:
-        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de eliminación de usuario via API')
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] '+request.remote_addr+' Error de eliminación de usuario via API')
         return jsonify({'ok': False,'msg' : 'Excepción al dar de baja el usuario'}), 400
 
     if success:
-        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', BAJA] via API: "' + request.form.get('name') + '"')
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', BAJA] '+request.remote_addr+' via API: "' + request.form.get('name') + '"')
         return jsonify({'ok': True,'msg' : 'Usuario dado de baja correctamente'}), 201
     else:
-        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] Error de eliminación de usuario via API')
+        logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] '+request.remote_addr+' Error de eliminación de usuario via API')
         return jsonify({'ok': False,'msg' : 'Error al dar de baja el usuario'}), 400
 
 

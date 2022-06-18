@@ -114,8 +114,6 @@ def listenWTS():
         except:
             print("Adios :)")
        
-        
-
 
 def main():
     global AFORO_MAX
