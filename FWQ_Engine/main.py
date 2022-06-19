@@ -120,59 +120,16 @@ def listenWTS():
         except:
             print("Adios :)")
 
-
-
-
-
-def updateWeather():  
-   
-    try:
-        cont = 0
-        while cont < 4:
-            try:
-                conn = sqlite3.connect('../database.db')
-                cur = conn.cursor()
-            except:
-                print("Error at conecting with bd when you want to see weather")
-            
-            if cont==0:
-                region="Madrid"
-                cont=cont+1
-            elif cont == 1:
-                region = "Toronto"
-                cont=cont+1
-            elif cont==2:
-                region= "Paris"
-                cont=cont+1
-            else:
-                region="Oslo"
-                cont=0
-           
-            weather = getWeather(region)
-           
-            goodAttr = [1,region]
-            badAttr = [0,region]
-            if int(float(weather)) >= 20 and int(float(weather)) <= 30:
-              
-                cur.execute('UPDATE attraction SET status = (?) WHERE region = (?)' ,goodAttr)
-                
-            else:
-               
-                cur.execute('UPDATE attraction SET status = (?) WHERE region =  (?)',badAttr )
-           
-                
-            
-            conn.commit()
-            conn.close()
-
-            try:
-                time.sleep(2)    
-            except:
-                print("Adios :)")
-
-
-    except:
-        print("Error when update weather")
+def updateRegions():
+    while True:
+        for i in range(1,4):
+            #try:
+            updateRegion(i)
+            sleep(1.2)
+            #except:
+            #    pass
+        
+        #sleep(0.5)    
 
 
 def main():
@@ -184,7 +141,7 @@ def main():
     new_thread = Thread(target=listenWTS)
     new_thread.start()
     
-    new_thread=Thread(target=updateWeather)
+    new_thread=Thread(target=updateRegions)
     new_thread.start()
 
     

@@ -39,7 +39,7 @@ def getToGo(mapa, attrs, lastAt):
 
     keys = list(attrs.keys())
     rand_attr= keys[random.randrange(0,len(keys))]
-    while int(attrs[str(rand_attr)]['tiempo']) > 60 or searchAttrById(mapa, rand_attr) == None:
+    while attrs[str(rand_attr)]['time'] > 60 or searchAttrById(mapa, rand_attr) == None:
         rand_attr= keys[random.randrange(0,len(keys))]
        
           
@@ -144,8 +144,6 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
     if lastAt != -1:
         mapa = mapa.copy()
         attrs = attrs.copy()
-        lastAtPos = searchAttrById(mapa, lastAt)
-        mapa[lastAtPos[0]][lastAtPos[1]] = 0
         try:
             attrs.pop(lastAt)
         except:
@@ -159,15 +157,11 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
         else:
             
             toGo = -1
-    
-    if toGo != -1:
-        if int(attrs[toGo]['tiempo']) >= 60:
-            toGo = -1
-        elif int(attrs[toGo]['status']) == 0:
-            toGo = -1 
-    
-    if toGo == -1:
-        
+       
+    if toGo != -1 and (attrs[str(toGo)]['time'] >= 60 or attrs[str(toGo)]['status'] == 0):
+        toGo = -1
+
+    if toGo == -1 or toGo == None:
         _, toGo = getToGo(mapa, attrs, lastAt)
         #print("entra" + str(toGo))
         
