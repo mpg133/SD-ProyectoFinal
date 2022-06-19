@@ -2,10 +2,13 @@
 
 import requests
 
+import subprocess
+
 import json
 
 from flask import Flask, jsonify,request
 from dotenv import dotenv_values
+from grpc_functs import *
 
 from map_funcs import getMap
 
@@ -29,6 +32,63 @@ def getMapApi():
     response = jsonify({'mapa': mapa, 'attrs' : attrsDict, 'visitors': vis_arr})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response, 201
+
+
+def getRegistryOk():
+    try:
+        response = requests.get('http://localhost:5000/ok') 
+    except:
+        resp = jsonify({'ok':'0'})
+        resp.headers.add('Access-Control-Allow-Origin', '*')
+        return resp, 200
+    
+    resp = jsonify({'ok':'1'})
+    resp.headers.add('Access-Control-Allow-Origin', '*')
+    return resp, 200
+
+def getWTSOk():
+    try:
+        stub=iniciarGrpcSecure()
+        
+        msg = todo_pb2.EngineReq()
+        response = stub.requestWaitingTimes(msg)
+        response = json.loads(response.times_string_dict.replace("'", "\""))
+    except:
+        resp = jsonify({'ok':'0'})
+        resp.headers.add('Access-Control-Allow-Origin', '*')
+        return resp, 200
+    
+    resp = jsonify({'ok':'1'})
+    resp.headers.add('Access-Control-Allow-Origin', '*')
+    return resp, 200
+
+
+@app.route('/modules/<module>',methods = ['GET'])
+def getModuleStatus(module):
+
+    if module == 'Registry':
+        return getRegistryOk()
+    elif module == 'Engine':
+        resp = jsonify({'ok':'1'})
+        resp.headers.add('Access-Control-Allow-Origin', '*')
+        return resp
+    elif module == 'WTS':
+        return getWTSOk()
+    elif module == 'Sensor':
+        try:
+            val = str(subprocess.check_output("ps aux | grep -E \"main.py [0-9]*\"", shell=True)).split("\\n")[0]
+            val = val[-2:]
+            val = int(val)
+            if val > 0 and val < 50:
+                resp = jsonify({'ok':'1'})
+                resp.headers.add('Access-Control-Allow-Origin', '*')
+                return resp, 200
+
+        except:
+            resp = jsonify({'ok':'0'})
+            resp.headers.add('Access-Control-Allow-Origin', '*')
+            return resp, 200
+
 
 
 

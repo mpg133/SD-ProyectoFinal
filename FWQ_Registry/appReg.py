@@ -103,6 +103,9 @@ def deleteUser():
         logIntoFile('[' + dt.strftime('%d/%m/%Y, %H:%M:%S') + ', ERROR] '+request.remote_addr+' Error de eliminación de usuario via API')
         return jsonify({'ok': False,'msg' : 'Error al dar de baja el usuario'}), 400
 
+@app.route('/ok', methods=['GET'])
+def getStatus():
+    return "1"
 
 if __name__ == '__main__':
     config = dotenv_values(".env")

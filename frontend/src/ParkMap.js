@@ -9,21 +9,54 @@ class ParkMap extends Component {
     this.state={
       map : [],
       attrs: {},
-      visitors: {}
+      sensors: {},
+      visitors: {},
+      regions: ['','','',''],
+      modules: ['WTS', 'Registry', 'Engine'],
+      moduleStatus: [false, false, false]
     }
     window.mapComponent = this;
   }
 
   getData(){
     
-    let baseURL = 'http://localhost:5001';
+    const baseURL = 'http://localhost:5001';
     const headers = {'Content-Type': 'application/json'};
     axios.get(baseURL + '/map', {'headers' : headers}).then((response) => {
       this.setState(() => ({
         map: response.data['mapa'],
         attrs: response.data['attrs'],
-        visitors: response.data['visitors'],
-        regions: ['','','','']
+        visitors: response.data['visitors']
+      }));
+    });
+
+    var ok = this.state.moduleStatus;
+    axios.get(baseURL + '/modules/WTS', {'headers' : headers}).then((response) => {
+      ok[0] = response.data['ok'] == '1';
+      this.setState(() => ({
+        moduleStatus: ok
+      }));
+    });
+
+    ok = this.state.moduleStatus;
+    axios.get(baseURL + '/modules/Registry', {'headers' : headers}).then((response) => {
+      ok[1] = response.data['ok'] == '1';
+      this.setState(() => ({
+        moduleStatus: ok
+      }));
+    });
+
+    //TODO Falta darle false cuando haya peticion erronea
+    ok = this.state.moduleStatus;
+    axios.get(baseURL + '/modules/Engine', {'headers' : headers}).then((response) => {
+      ok[2] = response.data['ok'] == '1';
+      this.setState(() => ({
+        moduleStatus: ok
+      }));
+    }).catch(() => {
+      ok[2] = false;
+      this.setState(() => ({
+        moduleStatus: ok
       }));
     });
   }
@@ -112,6 +145,7 @@ class ParkMap extends Component {
       }else{
         cols.push(<td>[O]</td>)
       }
+      cols.push(<td>Ok <button>Check</button></td>)
       
       if(this.state.attrs[keys[i]]['status'] == 0){
         rows.push(<tr style={{color:'red', backgroundColor: '#151922'}}>{cols}</tr>)
@@ -124,14 +158,32 @@ class ParkMap extends Component {
 
   }
 
+  drawModuleStatus(){
+    const result = []
+    for (var i = 0; i<3; i++){
+      if (this.state.moduleStatus[i]){
+        result.push(<div className='margs'><div className="statusCells" style={{backgroundColor: "#419f80"}}>{this.state.modules[i]}</div></div>)
+      }else{
+        result.push(<div className='margs'><div className="statusCells" style={{backgroundColor: "#873737"}}>{this.state.modules[i]}</div></div>)
+      }
+    }
+    return <div className="flexin">
+      {result}
+    </div>
+  }
 
 
   render(){
-    return (<div className="mapVisGroup">
-      {this.drawVisitors()}
-      {this.drawMap()}
-      {this.drawAttracts()}
-    </div>)
+    return (<>
+      <div className="mapVisGroup">
+        {this.drawVisitors()}
+        {this.drawMap()}
+        {this.drawAttracts()}
+      </div>
+      <div className="statuses">
+        {this.drawModuleStatus()}
+      </div>
+    </>)
   }
 }
 

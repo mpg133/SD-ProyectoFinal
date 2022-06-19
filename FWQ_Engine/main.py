@@ -123,13 +123,13 @@ def listenWTS():
 def updateRegions():
     while True:
         for i in range(1,4):
-            #try:
-            updateRegion(i)
-            sleep(1.2)
-            #except:
-            #    pass
+            try:
+                updateRegion(i)
+                sleep(1.2)
+            except:
+                pass
         
-        #sleep(0.5)    
+        sleep(0.5)    
 
 
 def main():

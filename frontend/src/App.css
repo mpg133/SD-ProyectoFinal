@@ -23,6 +23,7 @@ body{
   margin-left: auto;
   margin-right: auto;
 }
+
 .attractionsTable{
   margin-left: auto;
   margin-right: auto;
@@ -32,9 +33,32 @@ body{
   margin-right: auto;
 }
 
-.rightThing {
+.statuses {
+  padding-top: 50px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.statusCells{
+  padding: 5px;
+  border-radius: 5px;
+  color: black;
+}
+
+.flexin{
+  display: flex;
+  justify-content: center;
+}
+
+.margs{
+  padding: 20px;
+}
+
+button{
+  background-color: #191c21;
+  border-color: rgb(0, 0, 0);
+  color: wheat;
+  border-radius: 6px;
 }
 
 .App-header {
