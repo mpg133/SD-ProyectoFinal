@@ -14,8 +14,25 @@ body{
   
   background-color: #313b4d;
 }
+.mapVisGroup{
+  margin-top: 50px;
+  display: flex
+}
 
 .mapTable {
+  margin-left: auto;
+  margin-right: auto;
+}
+.attractionsTable{
+  margin-left: auto;
+  margin-right: auto;
+}
+.visitorsTable{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rightThing {
   margin-left: auto;
   margin-right: auto;
 }
