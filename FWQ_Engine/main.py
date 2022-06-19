@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from appEng import *
 from grpc_functs import *
 from map_funcs import *
 import os
@@ -31,7 +32,7 @@ def json_serializer(data):
     return json.dumps(data).encode('utf-8')
 
 config = dotenv_values(".env")
-CIUDADES = ['Madrid','Toronto','Paris','Oslo']
+
 TIME_BASE_ATTR = config['TIME_BASE_ATTR']
 KAFKA_IP = config['KAFKA_IP']
 KAFKA_PORT = config['KAFKA_PORT']
@@ -42,7 +43,9 @@ AFORO_MAX=int(config['AFORO_MAX'])
 AFORO=0
 
 def exit_delete_topics(mapa, id_vis, name):
+   
     updatePosition(mapa, id_vis, -1 , -1)
+    
     LOGED.remove(name)
     global AFORO
     AFORO -= 1
@@ -61,12 +64,15 @@ def handleVisitor(name, id_vis):
     print("[O] ESTABLISHED CONNECTION: Visitor \"" + name + "\" connected.")
 
     try:
+    
         while True:
+
             msg = json.loads(next(consumer).value.decode('utf-8'))
             mapa, attrs, _ = getMap()
+        
             mapa, newPos = updatePosition(mapa, id_vis, msg['pos'], msg['next_pos'])
+           
             time.sleep(0.2)
-
             producer.send(name+"TopicRecv", {'ok': True, 'mapa' : mapa , 'attrs' : attrs, 'new_pos': newPos})
 
             if not msg['ok']:
@@ -74,6 +80,7 @@ def handleVisitor(name, id_vis):
     except:
         pass
     finally:
+        
         exit_delete_topics(mapa, id_vis, name)
 
 
@@ -112,14 +119,72 @@ def listenWTS():
             time.sleep(1)    
         except:
             print("Adios :)")
-       
+
+
+
+
+
+def updateWeather():  
+   
+    try:
+        cont = 0
+        while cont < 4:
+            try:
+                conn = sqlite3.connect('../database.db')
+                cur = conn.cursor()
+            except:
+                print("Error at conecting with bd when you want to see weather")
+            
+            if cont==0:
+                region="Madrid"
+                cont=cont+1
+            elif cont == 1:
+                region = "Toronto"
+                cont=cont+1
+            elif cont==2:
+                region= "Paris"
+                cont=cont+1
+            else:
+                region="Oslo"
+                cont=0
+           
+            weather = getWeather(region)
+           
+            goodAttr = [1,region]
+            badAttr = [0,region]
+            if int(float(weather)) >= 20 and int(float(weather)) <= 30:
+              
+                cur.execute('UPDATE attraction SET status = (?) WHERE region = (?)' ,goodAttr)
+                
+            else:
+               
+                cur.execute('UPDATE attraction SET status = (?) WHERE region =  (?)',badAttr )
+           
+                
+            
+            conn.commit()
+            conn.close()
+
+            try:
+                time.sleep(2)    
+            except:
+                print("Adios :)")
+
+
+    except:
+        print("Error when update weather")
+
 
 def main():
     global AFORO_MAX
     global AFORO
     global LOGED
-    global CIUDADES
+    
+
     new_thread = Thread(target=listenWTS)
+    new_thread.start()
+    
+    new_thread=Thread(target=updateWeather)
     new_thread.start()
 
     
@@ -127,6 +192,7 @@ def main():
     producer = kp(bootstrap_servers = BROKER, value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks='all')
 
     while True:
+        
         print("[...] LOGIN: Awaiting for info on Kafka Server")
         msg = json.loads(next(login_consumer).value.decode('utf-8'))
         time.sleep(0.1)
@@ -142,7 +208,7 @@ def main():
             firstPos = getRandomEmpty(mapa)
             producer.send("loginResponsesTopic", {'ok': True, 'firstPos' : firstPos, 'id_vis': id_vis, 'msg' : 'Login ok'})
             time.sleep(0.3)
-
+            
             new_thread = Thread(target=handleVisitor, args=(msg['name'], id_vis))
             new_thread.start()
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-kaf=$(ls | grep kafka_2.13)
+kaf=$(ls | grep kafka_2.1)
 
 gnome-terminal -t zookeper --tab -- $kaf/bin/zookeeper-server-start.sh $kaf/config/zookeeper.properties
 sleep 0.1

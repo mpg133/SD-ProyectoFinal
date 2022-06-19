@@ -18,28 +18,30 @@ def yDown(pos):
     return [pos[0], pos[1] - 1 if pos[1] > 0 else MAP_SIZE - 1]
 def yUp(pos):
     return [pos[0], pos[1] + 1 if pos[1] < MAP_SIZE - 1 else 0]
-
-def getMinTimeAttraction(attrs, lastAt):
-    minTime = min(attrs.values())
-    for n in attrs.keys():
-        if attrs[n] == minTime and int(n) != lastAt:
-            val = n
-            break
-    return val
-
+#def getMinTimeAttraction(attrs, lastAt):
+#    minTime = min(attrs.values())
+#    for n in attrs.keys():
+#        if attrs[n] == minTime and int(n) != lastAt:
+#            val = n
+#            break
+#   return val
+#
 def getToGo(mapa, attrs, lastAt):
    
 
     
     attrs=attrs.copy()
+  
     try:
+        
         attrs.pop(lastAt)
     except:
         pass
 
     keys = list(attrs.keys())
     rand_attr= keys[random.randrange(0,len(keys))]
-    while attrs[str(rand_attr)] > 60 or searchAttrById(mapa, rand_attr) == None:
+  
+    while (int(attrs[str(rand_attr)]['status']) == 0 or int(attrs[str(rand_attr)]['tiempo']) > 60 ) and searchAttrById(mapa, rand_attr) == None:
         rand_attr= keys[random.randrange(0,len(keys))]
        
           
@@ -144,30 +146,39 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
     if lastAt != -1:
         mapa = mapa.copy()
         attrs = attrs.copy()
+       
         lastAtPos = searchAttrById(mapa, lastAt)
         mapa[lastAtPos[0]][lastAtPos[1]] = 0
-        try:
-            attrs.pop(lastAt)
-        except:
-            pass
+
+   
+        attrs.pop(str(lastAt))
+        
             
     inAttr = isInAttraction(name)
-    if inAttr != -1:
+    #print("1: "+str(toGo))
+    if int(inAttr) != -1:
         goOut = timePassed(name, inAttr)
         if not goOut:
             return pos, pos, inAttr, toGo
         else:
+            
             toGo = -1
-       
-    if toGo != -1 and attrs[str(toGo)] >= 60:
-        toGo = -1
-
+    
+    if toGo != -1:
+        if int(attrs[toGo]['tiempo']) >= 60:
+            toGo = -1
+        elif int(attrs[toGo]['status']) == 0:
+            toGo = -1 
+    
     if toGo == -1:
+        
         _, toGo = getToGo(mapa, attrs, lastAt)
+        #print("entra" + str(toGo))
+        
     else:
         toGo=searchAttrById(mapa,toGo)
-
-
+  
+    #print("2: "+str(toGo))
     neight_occupied = neigh(mapa, pos, False)
     if toGo in neight_occupied:
         enterAttraction(name, mapa[toGo[0]][toGo[1]])
