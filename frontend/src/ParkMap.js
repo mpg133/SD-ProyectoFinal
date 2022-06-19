@@ -24,23 +24,6 @@ class ParkMap extends Component {
         attrs: response.data['attrs'],
         visitors: response.data['visitors']
       }));
-
-
-
-      // provisional para mostrar los datos en string.
-      /*
-      var newString = '';
-      for(var i = 0; i < this.state.map.length; i++){
-        for(var j = 0; j < this.state.map.length; j++){
-          newString += this.state.map[i][j] + '_ ';
-        }
-        newString += "</br>";
-      }
-
-      if (this.state.map != ''){
-        document.getElementById('mapDiv').innerHTML = newString;
-      }
-      //*/
     });
   }
 
@@ -88,12 +71,53 @@ class ParkMap extends Component {
     return <table className="mapTable"><tbody>{rows}</tbody></table>;
   }
 
+  drawVisitors(){
+    var cols = []
+    var rows = []
+    
+    cols.push(<td>ID</td>)
+    cols.push(<td>NAME</td>)
+    cols.push(<td>STATUS</td>)
+    rows.push(<tr>{cols}</tr>)
+    cols = []
+    for(var i = 0; i < this.state.visitors.length; i++){
+      cols.push(<td>{this.state.visitors[i]['id']}</td>)
+      cols.push(<td>{this.state.visitors[i]['name']}</td>)
+      cols.push(<td>{this.state.visitors[i]['status']}</td>)
+      
+      rows.push(<tr>{cols}</tr>)
+      cols = []
+    }
+    return <table className="visitorsTable"><tbody>{rows}</tbody></table>
+  }
+
+  drawAttracts(){
+    var cols = []
+    var rows = []
+    
+    cols.push(<td>ID</td>)
+    cols.push(<td>TIME</td>)
+    rows.push(<tr>{cols}</tr>)
+    cols = []
+    var keys = Object.keys(this.state.attrs);
+    for(var i = 0; i < keys.length; i++){
+      cols.push(<td>{i}</td>)
+      cols.push(<td>{this.state.attrs[keys[i]]}</td>)
+      
+      rows.push(<tr>{cols}</tr>)
+      cols = []
+    }
+    return <table className="attractionsTable"><tbody>{rows}</tbody></table>
+
+  }
+
 
 
   render(){
-    return (<div>
-      <div id='mapDiv'></div>
+    return (<div className="mapVisGroup">
+      {this.drawVisitors()}
       {this.drawMap()}
+      {this.drawAttracts()}
     </div>)
   }
 }
