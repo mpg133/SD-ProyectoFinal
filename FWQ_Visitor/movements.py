@@ -144,8 +144,6 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
     if lastAt != -1:
         mapa = mapa.copy()
         attrs = attrs.copy()
-        lastAtPos = searchAttrById(mapa, lastAt)
-        mapa[lastAtPos[0]][lastAtPos[1]] = 0
         try:
             attrs.pop(lastAt)
         except:
@@ -159,7 +157,7 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
         else:
             toGo = -1
        
-    if toGo != -1 and attrs[str(toGo)]['time'] >= 60:
+    if toGo != -1 and (attrs[str(toGo)]['time'] >= 60 or attrs[str(toGo)]['status'] == 0):
         toGo = -1
 
     if toGo == -1 or toGo == None:

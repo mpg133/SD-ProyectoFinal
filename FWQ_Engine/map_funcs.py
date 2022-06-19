@@ -1,8 +1,18 @@
 #!/usr/bin/python3
 
+from time import sleep
 import sqlite3
 import re
 import random
+
+import requests
+
+import json
+
+from dotenv import dotenv_values
+
+config = dotenv_values(".env")
+OPENWEATHER_API_KEY = config['OPENWEATHER_API_KEY']
 
 def getMap():
     conn = sqlite3.connect('../database.db')
@@ -85,3 +95,23 @@ def getRandomEmpty(mapa):
         y = random.randrange(0,19)
         
     return [x,y]
+
+def updateRegion(num):
+    
+    dic = {'Madrid': {'lat' : '40.4167047', 'lon' : '-3.7035825' }, 'Toronto':{'lat': '43.6534817' , 'lon': '-79.3839347' }, 'Paris': {'lat': '48.8588897' , 'lon': '2.320041'}, 'Oslo': {'lat': '59.9133301', 'lon': '10.7389701' }}
+    ciudad = list(dic.keys())[num]
+
+    response = requests.get('https://api.openweathermap.org/data/2.5/weather?lat='+dic[ciudad]['lat']+'&lon='+dic[ciudad]['lon']+'&appid='+OPENWEATHER_API_KEY)
+    temp = float(round(json.loads(response.text)['main']['temp'] - 273.15, 2))
+
+    if temp < 20 or temp > 40:
+        conn = sqlite3.connect('../database.db')
+        cur = conn.cursor()
+        cur.execute('update attraction set status = 0 WHERE region = "'+ciudad+'"')
+        conn.commit()
+        conn.close()
+
+
+
+
+

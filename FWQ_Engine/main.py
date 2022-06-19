@@ -112,13 +112,28 @@ def listenWTS():
             time.sleep(1)    
         except:
             print("Adios :)")
-       
+
+def updateRegions():
+    while True:
+        for i in range(1,4):
+            #try:
+            updateRegion(i)
+            sleep(1.2)
+            #except:
+            #    pass
+        
+        #sleep(0.5)    
+
 
 def main():
     global AFORO_MAX
     global AFORO
     global LOGED
     global CIUDADES
+
+    new_thread = Thread(target=updateRegions)
+    new_thread.start()
+
     new_thread = Thread(target=listenWTS)
     new_thread.start()
 
