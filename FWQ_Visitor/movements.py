@@ -162,7 +162,7 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
     if toGo != -1 and attrs[str(toGo)] >= 60:
         toGo = -1
 
-    if toGo == -1:
+    if toGo == -1 or toGo == None:
         _, toGo = getToGo(mapa, attrs, lastAt)
     else:
         toGo=searchAttrById(mapa,toGo)
