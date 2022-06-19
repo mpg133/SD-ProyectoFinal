@@ -75,11 +75,14 @@ def getModuleStatus(module):
     elif module == 'WTS':
         return getWTSOk()
     elif module == 'Sensor':
+
+        sensorId = int(request.args['sensorId'])
         try:
-            val = str(subprocess.check_output("ps aux | grep -E \"main.py [0-9]*\"", shell=True)).split("\\n")[0]
+            val = str(subprocess.check_output("ps aux | grep 'main.py "+str(sensorId) + "'", shell=True)).split("\\n")[0]
             val = val[-2:]
             val = int(val)
-            if val > 0 and val < 50:
+            print("\n\n\n"+'sensorrrrr: ' + str(val))
+            if val == int(sensorId):
                 resp = jsonify({'ok':'1'})
                 resp.headers.add('Access-Control-Allow-Origin', '*')
                 return resp, 200

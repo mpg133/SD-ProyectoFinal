@@ -133,6 +133,7 @@ class ParkMap extends Component {
     cols.push(<td>TIME</td>)
     cols.push(<td>REGION</td>)
     cols.push(<td>STATUS</td>)
+    cols.push(<td>SENSORES</td>)
     rows.push(<tr>{cols}</tr>)
     cols = []
     var keys = Object.keys(this.state.attrs);
