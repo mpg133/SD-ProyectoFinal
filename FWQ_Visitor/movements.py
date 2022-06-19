@@ -152,22 +152,29 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
             pass
             
     inAttr = isInAttraction(name)
-    if inAttr != -1:
+    if int(inAttr) != -1:
         goOut = timePassed(name, inAttr)
         if not goOut:
             return pos, pos, inAttr, toGo
         else:
+            
             toGo = -1
-       
-    if toGo != -1 and attrs[str(toGo)] >= 60:
-        toGo = -1
-
-    if toGo == -1 or toGo == None:
+    
+    if toGo != -1:
+        if int(attrs[toGo]['tiempo']) >= 60:
+            toGo = -1
+        elif int(attrs[toGo]['status']) == 0:
+            toGo = -1 
+    
+    if toGo == -1:
+        
         _, toGo = getToGo(mapa, attrs, lastAt)
+        #print("entra" + str(toGo))
+        
     else:
         toGo=searchAttrById(mapa,toGo)
-
-
+  
+    #print("2: "+str(toGo))
     neight_occupied = neigh(mapa, pos, False)
     if toGo in neight_occupied:
         enterAttraction(name, mapa[toGo[0]][toGo[1]])
