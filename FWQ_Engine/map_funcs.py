@@ -56,7 +56,7 @@ def updatePosition(mapa, id_vis, pos, newPos):
         return mapa, pos
 
     if newPos == -1:
-        mapa = [ m if m != '-'+str(id_vis) else '0' for m in mapa]
+        mapa = [[m if m != '-'+str(id_vis) else '0' for m in fila] for fila in mapa]
         saveMap(mapa, id_vis, 'disconnected')
         return 
         

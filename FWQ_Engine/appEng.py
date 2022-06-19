@@ -23,9 +23,13 @@ def getMapApi():
     try:
         mapa, attrsDict, vis_arr = getMap()
     except:
-        return jsonify({'ok': False,'msg' : 'Error en el acceso a la base de datos'}), 400
+        response = jsonify({'ok': False,'msg' : 'Error en el acceso a la base de datos'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response, 400
 
-    return jsonify({'mapa': mapa, 'attrs' : attrsDict, 'visitors': vis_arr}), 201
+    response = jsonify({'mapa': mapa, 'attrs' : attrsDict, 'visitors': vis_arr})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response, 201
 
 
 @app.route('/weather/<ciudad>',methods = ['GET'])
