@@ -22,7 +22,8 @@ class ParkMap extends Component {
       this.setState(() => ({
         map: response.data['mapa'],
         attrs: response.data['attrs'],
-        visitors: response.data['visitors']
+        visitors: response.data['visitors'],
+        regions: ['','','','']
       }));
     });
   }
@@ -103,7 +104,7 @@ class ParkMap extends Component {
     cols = []
     var keys = Object.keys(this.state.attrs);
     for(var i = 0; i < keys.length; i++){
-      cols.push(<td>{i}</td>)
+      cols.push(<td>{keys[i]}</td>)
       cols.push(<td>{this.state.attrs[keys[i]]['region']}</td>)
       cols.push(<td>{this.state.attrs[keys[i]]['status']}</td>)
       cols.push(<td>{this.state.attrs[keys[i]]['tiempo']}</td>)
