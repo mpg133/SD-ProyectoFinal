@@ -1,7 +1,11 @@
-.App {
-  text-align: center;
+body{
   background-color: #282c34;
   color: white;
+
+}
+
+.App {
+  text-align: center;
 }
 
 .App-header {
