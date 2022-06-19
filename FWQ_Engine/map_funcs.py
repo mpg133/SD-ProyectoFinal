@@ -30,7 +30,7 @@ def getMap():
     cur.execute('select * from attraction')
     attrs = cur.fetchall()
    
-    diccionario = {}
+    attrs_dict = {}
 
     for i in attrs:
         attrs_dict[str(i[0])] = {'time':i[1], 'region':i[2], 'status':i[3]}
@@ -43,7 +43,7 @@ def getMap():
 
     conn.close()
     
-    return mapa, diccionario, vis_arr
+    return mapa, attrs_dict, vis_arr
 
 def saveMap(mapa, vis, visStatus):
     string = ''
