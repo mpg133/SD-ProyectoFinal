@@ -5,6 +5,7 @@ import re
 import random
 
 def getMap():
+   
     conn = sqlite3.connect('../database.db')
     cur = conn.cursor()
     cur.execute('SELECT * FROM map WHERE id = 1')
@@ -18,9 +19,17 @@ def getMap():
     
     cur.execute('select * from attraction')
     attrs = cur.fetchall()
-    attrs_dict = {}
+   
+    diccionario = {}
+
     for i in attrs:
-        attrs_dict[str(i[0])] = i[1]
+        id = str(i[0])
+        tiempo = str(i[1])
+        region = str(i[2])
+        status = str(i[3])
+        diccionario[id] =  {'tiempo': tiempo,'region': region,'status': status}
+    #print(str(diccionario))    
+
 
     cur.execute('select * from visitor')
     attrs = cur.fetchall()
@@ -29,8 +38,8 @@ def getMap():
         vis_arr.append({'id':str(i[0]) , 'name' : str(i[1]), 'status' : str(i[3])})
 
     conn.close()
-
-    return mapa, attrs_dict, vis_arr
+    
+    return mapa, diccionario, vis_arr
 
 def saveMap(mapa, vis, visStatus):
     string = ''
@@ -51,7 +60,9 @@ def saveMap(mapa, vis, visStatus):
 
 
 def updatePosition(mapa, id_vis, pos, newPos):
+    
     visStatus = None
+    mapa = mapa.copy()
     if newPos != -1 and int(mapa[newPos[0]][newPos[1]]) < 0:
         return mapa, pos
 
@@ -71,7 +82,7 @@ def updatePosition(mapa, id_vis, pos, newPos):
                     mapa[x][y] = "-"+str(id_vis)
                 else:
                     visStatus = str(mapa[x][y])
-
+   
     saveMap(mapa, id_vis, visStatus)
     
     return mapa, newPos

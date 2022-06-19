@@ -52,13 +52,15 @@ def parqueLogin(name, password):
     prod.send('loginTopic', {'name' : name, 'password' : password},partition=0)
     
     print("Esperando respuesta del login...")
+    msg = {}
     msg = json.loads(next(cons).value.decode('utf-8'))
-    print(msg['msg'])
+    
 
     if msg['ok']:
         firstPos = msg['firstPos']
         return msg['ok'], firstPos, msg['id_vis']
     else:
+       
         return msg['ok'], None, None
 
 
@@ -82,11 +84,10 @@ def entraAlParque(name, firstPos):
         msg = json.loads(next(consumer).value.decode('utf-8'))
 
         pos = msg['new_pos']
-        
+
         print(mapaToString(msg['mapa']))
-
+        
         nextPos, toGo, LAST_ATTR, toGoId = moveAuto(msg['mapa'], pos, msg['attrs'], name, LAST_ATTR,toGoId)
-
         time.sleep(0.7)
 
 
