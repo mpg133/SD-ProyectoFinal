@@ -107,9 +107,17 @@ class ParkMap extends Component {
       cols.push(<td>{keys[i]}</td>)
       cols.push(<td>{this.state.attrs[keys[i]]['time']}</td>)
       cols.push(<td>{this.state.attrs[keys[i]]['region']}</td>)
-      cols.push(<td>{this.state.attrs[keys[i]]['status']}</td>)
+      if(this.state.attrs[keys[i]]['status'] == 0){
+        cols.push(<td>[X]</td>)
+      }else{
+        cols.push(<td>[O]</td>)
+      }
       
-      rows.push(<tr>{cols}</tr>)
+      if(this.state.attrs[keys[i]]['status'] == 0){
+        rows.push(<tr style={{color:'red', backgroundColor: '#151922'}}>{cols}</tr>)
+      }else{
+        rows.push(<tr style={{color:'green', backgroundColor: '#151922'}}>{cols}</tr>)
+      }
       cols = []
     }
     return <table className="attractionsTable"><tbody>{rows}</tbody></table>
