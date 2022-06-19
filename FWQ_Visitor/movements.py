@@ -39,7 +39,7 @@ def getToGo(mapa, attrs, lastAt):
 
     keys = list(attrs.keys())
     rand_attr= keys[random.randrange(0,len(keys))]
-    while attrs[str(rand_attr)] > 60 or searchAttrById(mapa, rand_attr) == None:
+    while int(attrs[str(rand_attr)]['tiempo']) > 60 or searchAttrById(mapa, rand_attr) == None:
         rand_attr= keys[random.randrange(0,len(keys))]
        
           
