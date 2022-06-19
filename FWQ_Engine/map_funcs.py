@@ -20,7 +20,7 @@ def getMap():
     attrs = cur.fetchall()
     attrs_dict = {}
     for i in attrs:
-        attrs_dict[str(i[0])] = i[1]
+        attrs_dict[str(i[0])] = {'time':i[1], 'region':i[2], 'status':i[3]}
 
     cur.execute('select * from visitor')
     attrs = cur.fetchall()

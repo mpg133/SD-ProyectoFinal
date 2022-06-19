@@ -39,7 +39,7 @@ def getToGo(mapa, attrs, lastAt):
 
     keys = list(attrs.keys())
     rand_attr= keys[random.randrange(0,len(keys))]
-    while attrs[str(rand_attr)] > 60 or searchAttrById(mapa, rand_attr) == None:
+    while attrs[str(rand_attr)]['time'] > 60 or searchAttrById(mapa, rand_attr) == None:
         rand_attr= keys[random.randrange(0,len(keys))]
        
           
@@ -159,7 +159,7 @@ def moveAuto(mapa, pos, attrs, name, lastAt, toGo):
         else:
             toGo = -1
        
-    if toGo != -1 and attrs[str(toGo)] >= 60:
+    if toGo != -1 and attrs[str(toGo)]['time'] >= 60:
         toGo = -1
 
     if toGo == -1 or toGo == None:

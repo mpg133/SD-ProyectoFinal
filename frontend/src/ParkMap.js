@@ -97,12 +97,16 @@ class ParkMap extends Component {
     
     cols.push(<td>ID</td>)
     cols.push(<td>TIME</td>)
+    cols.push(<td>REGION</td>)
+    cols.push(<td>STATUS</td>)
     rows.push(<tr>{cols}</tr>)
     cols = []
     var keys = Object.keys(this.state.attrs);
     for(var i = 0; i < keys.length; i++){
-      cols.push(<td>{i}</td>)
-      cols.push(<td>{this.state.attrs[keys[i]]}</td>)
+      cols.push(<td>{keys[i]}</td>)
+      cols.push(<td>{this.state.attrs[keys[i]]['time']}</td>)
+      cols.push(<td>{this.state.attrs[keys[i]]['region']}</td>)
+      cols.push(<td>{this.state.attrs[keys[i]]['status']}</td>)
       
       rows.push(<tr>{cols}</tr>)
       cols = []
