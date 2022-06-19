@@ -78,10 +78,7 @@ def getModuleStatus(module):
 
         sensorId = int(request.args['sensorId'])
         try:
-            val = str(subprocess.check_output("ps aux | grep 'main.py "+str(sensorId) + "'", shell=True)).split("\\n")[0]
-            val = val[-2:]
-            val = int(val)
-            print("\n\n\n"+'sensorrrrr: ' + str(val))
+            val = int(str(subprocess.check_output("ps aux | grep 'main.py "+str(sensorId) + "'", shell=True)).split("\\n")[0][-2:])
             if val == int(sensorId):
                 resp = jsonify({'ok':'1'})
                 resp.headers.add('Access-Control-Allow-Origin', '*')

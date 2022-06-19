@@ -126,6 +126,7 @@ class ParkMap extends Component {
   }
 
   drawAttracts(){
+    const baseURL = 'http://localhost:5001';
     var cols = []
     var rows = []
     
@@ -146,7 +147,7 @@ class ParkMap extends Component {
       }else{
         cols.push(<td>[O]</td>)
       }
-      cols.push(<td>Ok <button>Check</button></td>)
+      cols.push(<td>Ok <a href={baseURL+'/modules/Sensor?sensorId=' + keys[i]}><button>Check</button></a></td>)
       
       if(this.state.attrs[keys[i]]['status'] == 0){
         rows.push(<tr style={{color:'red', backgroundColor: '#151922'}}>{cols}</tr>)
@@ -173,6 +174,21 @@ class ParkMap extends Component {
     </div>
   }
 
+  getSensorStatus(id){
+
+    id = id + "";
+    const baseURL = 'http://localhost:5001';
+    const headers = {'Content-Type': 'application/json'};
+
+    const sens = this.state.sensors;
+
+    axios.get(baseURL + '/modules/Sensor?sensorId=' + id, {'headers' : headers}).then((response) => {
+      sens[id] = response.data['ok'] == '1';
+      this.setState(() => ({
+        sensors: sens
+      }));
+    });
+  }
 
   render(){
     return (<>
