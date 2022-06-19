@@ -25,6 +25,10 @@ class ParkMap extends Component {
         visitors: response.data['visitors']
       }));
 
+
+
+      // provisional para mostrar los datos en string.
+      /*
       var newString = '';
       for(var i = 0; i < this.state.map.length; i++){
         for(var j = 0; j < this.state.map.length; j++){
@@ -36,15 +40,8 @@ class ParkMap extends Component {
       if (this.state.map != ''){
         document.getElementById('mapDiv').innerHTML = newString;
       }
+      //*/
     });
-
-    
-    //document.getElementById('mapDiv').innerHTML = JSON.stringify(this.state.map['2']['id']);
-    /*
-    if (this.state.map != ''){
-      document.getElementById('mapDiv').innerHTML = this.showData();
-    }
-    */
   }
 
   componentDidMount(){
@@ -54,16 +51,49 @@ class ParkMap extends Component {
     );
   }
 
-  start(){
-    if (this.state.map != ''){
-      document.getElementById('mapDiv').innerHTML = this.state.map;
+  drawLine(line, row){
+    var cols = []
+
+    for(var i = 0; i < line.length; i++){
+      if (line[i] != '0'){
+        if(parseInt(line[i]) > 0){
+          cols.push(<td style={{backgroundColor: "black"}} className="mapDrawing" key={i + 'x' + row + 'y'}>{line[i]}</td>);
+        }else{
+          cols.push(<td style={{backgroundColor: "green"}} className="mapDrawing" key={i + 'x' + row + 'y'}>{line[i]}</td>);
+        }
+      }else{
+        var bg = "";
+        if(row >= 10 && i >= 10){
+          bg = "#55554d";
+        }else if(row >= 10 && i < 10){
+          bg = "#553b55";
+        }else if(row < 10 && i < 10){
+          bg = "#315555";
+        }else if(row < 10 && i >= 10){
+          bg = "#313b4d";
+        }
+        cols.push(<td style={{backgroundColor: bg}} className="mapDrawing" key={i + 'x' + row + 'y'}> </td>);
+      }
     }
+    return <tr key={row}>{cols}</tr>;
   }
+
+  drawMap(){
+    var map = this.state.map
+    var rows = []
+
+    for(var i = 0; i < map.length; i++){
+      rows.push(this.drawLine(map[i], i));
+    }
+    return <table className="mapTable"><tbody>{rows}</tbody></table>;
+  }
+
 
 
   render(){
     return (<div>
       <div id='mapDiv'></div>
+      {this.drawMap()}
     </div>)
   }
 }

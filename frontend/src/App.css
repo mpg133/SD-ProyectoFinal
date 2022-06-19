@@ -8,6 +8,18 @@ body{
   text-align: center;
 }
 
+.mapDrawing {
+  height: 23px;
+  width: 23px;
+  
+  background-color: #313b4d;
+}
+
+.mapTable {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .App-header {
   min-height: 100vh;
   display: flex;

@@ -5,7 +5,6 @@ import ParkMap from './ParkMap';
 function App() {
 
   useEffect(() => {
-    window.mapComponent.start()
   })
 
   return (
